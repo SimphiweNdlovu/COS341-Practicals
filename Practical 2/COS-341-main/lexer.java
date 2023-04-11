@@ -13,16 +13,20 @@ import java.nio.*;
 
 public class lexer {
 
+  final  ArrayList<token> Validtokens = new ArrayList<token>();
+
   class token{    
     int id; //(position of the token in the stream).
     String _class; //  (for example: number, or keyword) 
     String contents; // token-type , whats written in the string
+    int lineNumber;
     // token next;    
         
-    public token(int id,String _class,String contents) {    
+    public token(int id,String _class,String contents, int lineNumber) {    
         this.id=id;
         this._class = _class; 
         this.contents=contents;   
+        this.lineNumber=lineNumber;
             
     }    
 } 
@@ -43,7 +47,7 @@ public static boolean AssciCharBetween32to127(String s) {
   return true;
 }
 
-  public void c_lexer() throws FileNotFoundException {
+  public  ArrayList<token> c_lexer() throws FileNotFoundException {
     Character[] letter_chars = new Character[]{'a','b','c','d','e','f','g','h','i' ,'j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
     Character[] letterupppercase_chars = new Character[]{ 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     Character[] numbers1 = new Character[]{'0','2','1','3','4','5','6','7','8','9'};
@@ -58,7 +62,7 @@ public static boolean AssciCharBetween32to127(String s) {
     List<Character> numbers = new ArrayList<>(Arrays.asList(numbers1));
     List<Character> _tokenSymbols = new ArrayList<>(Arrays.asList(tokenSymbols));
     
-    final  ArrayList<token> Validtokens = new ArrayList<token>();
+
     int Id_num=0;
       final  ArrayList<String> OutputArr = new ArrayList<String>();
       int OutputArr_Count=0;
@@ -114,7 +118,7 @@ public static boolean AssciCharBetween32to127(String s) {
                       {
                         OutputArr.add(store);
                         Id_num++;
-                        token obj=new token(Id_num,"Shotstring", store);
+                        token obj=new token(Id_num,"Shotstring", store,lineNumber);
                         Validtokens.add(obj);
                         OutputArr_Count++;
                         i=ii; //updating the curser
@@ -171,7 +175,7 @@ public static boolean AssciCharBetween32to127(String s) {
                       {
                         OutputArr.add(store);
                         Id_num++;
-                        token obj=new token(Id_num,"Comment", store);
+                        token obj=new token(Id_num,"Comment", store,lineNumber);
                         Validtokens.add(obj);
                         OutputArr_Count++;
                         i=ii; //updating the curser
@@ -215,7 +219,7 @@ public static boolean AssciCharBetween32to127(String s) {
             store="";
             store+=myChar[i];
               Id_num++;
-              token obj=new token(Id_num,"Letter", store);
+              token obj=new token(Id_num,"Letter", store  ,lineNumber);
               Validtokens.add(obj);
            
               System.out.println("( Token number: " + (Id_num) + " ,Letter, " +  myChar[i] + ")   line number:"+lineNumber );
@@ -234,7 +238,7 @@ public static boolean AssciCharBetween32to127(String s) {
               {
                 store=":=";
                 Id_num++;
-                token obj=new token(Id_num,"token_assignOperator", store);
+                token obj=new token(Id_num,"token_assignOperator", store  ,lineNumber);
                 Validtokens.add(obj);
                 System.out.println("( Token "+(Id_num)+" , token_assignOperator, := )");
                         
@@ -251,7 +255,7 @@ public static boolean AssciCharBetween32to127(String s) {
               store="";
               store+=myChar[i];
               Id_num++;
-              token obj=new token(Id_num,"tokenSymbol", store);
+              token obj=new token(Id_num,"tokenSymbol", store ,lineNumber);
               Validtokens.add(obj);
   
               System.out.println("( Token: " + Id_num + ",tokenSymbol, "+store+ " ) ");
@@ -265,7 +269,7 @@ public static boolean AssciCharBetween32to127(String s) {
             if(( i+4 <linelength) &&  myChar[i]=='0' && myChar[i+1]=='.' && myChar[i+2]=='0' &&myChar[i+3]=='0'){
               store="0.00";
               Id_num++;
-              token obj=new token(Id_num,"Decimal number", store);
+              token obj=new token(Id_num,"Decimal number", store  ,lineNumber);
               Validtokens.add(obj);
               System.out.println("( Token " + (Id_num)+" ,Decimal number, " + store + " )");
               i=i+3;
@@ -274,7 +278,7 @@ public static boolean AssciCharBetween32to127(String s) {
               store="";
               store+=myChar[i];  
               Id_num++;
-              token obj=new token(Id_num,"Digits", store);
+              token obj=new token(Id_num,"Digits", store  ,lineNumber);
               Validtokens.add(obj);
               System.out.println("( Token " + (Id_num)+" ,Digits, " + store + " )");
             }
@@ -296,6 +300,7 @@ public static boolean AssciCharBetween32to127(String s) {
         lineNumber++;
       }
     }
+    return Validtokens;
 
   }
 
