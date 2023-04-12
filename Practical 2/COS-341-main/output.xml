@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<PROGRAME>
+    <PROGR id="0">
+        <ALGO id="1">
+            <INSTR id="2">
+                <LOOP id="3">
+                    w(
+                    <BOOLEXPR id="4">
+                        <LOGIC id="5">
+                            T
+                        </LOGIC>
+                    </BOOLEXPR>
+                    ){
+                    <ALGO id="6">
+                        <INSTR id="7">
+                            <CALL id="8">
+                                cp
+                                <DIGITS id="9">
+                                    <D id="10">
+                                        4
+                                    </D>
+                                    <MORE id="11">
+                                        <DIGITS id="12">
+                                            <D id="13">
+                                                5
+                                            </D>
+                                        </DIGITS>
+                                    </MORE>
+                                </DIGITS>
+                            </CALL>
+                        </INSTR>
+                    </ALGO>
+                    }
+                </LOOP>
+            </INSTR>
+        </ALGO>
+    </PROGR>
+</PROGRAME>
