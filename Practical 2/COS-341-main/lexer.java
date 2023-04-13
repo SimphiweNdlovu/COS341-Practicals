@@ -54,7 +54,7 @@ public static boolean AssciCharBetween32to127(String s) {
     Character[] validletters=new Character[]{'p','h','c','w','i','e','n','b','s','a','m','d','T','F','v','E','g','o','r','t'};
     System.out.println("valid letters"+validletters.length);
    
-    Character tokenSymbols[] = { ';', '{', '}', '(', ')', ',' ,'-','^','<','>','!' ,'.'};
+    Character tokenSymbols[] = { ';', '{', '}', '(', ')', ',' ,'-','^','<','>','!' ,'.',':','='};
 
     List<Character> validLetters= new ArrayList<>(Arrays.asList(validletters));
     List <Character> letterupppercase = new ArrayList<>(Arrays.asList(letterupppercase_chars));
@@ -89,7 +89,7 @@ public static boolean AssciCharBetween32to127(String s) {
             if (myChar[i] == ' ') {
               continue;
             }
-           else if(myChar[i] != ' ' && myChar[i] != '*' && myChar[i] != ':'&&myChar[i] != '=' && myChar[i] != '0' &&  !numbers.contains(myChar[i]) && myChar[i] != '\"' && !(letter.contains(myChar[i]) || numbers.contains(myChar[i]) || _tokenSymbols.contains(myChar[i]) || letterupppercase.contains(myChar[i])))
+            if(myChar[i] != ' ' && myChar[i] != '*' && myChar[i] != ':'&&myChar[i] != '=' && myChar[i] != '0' &&  !numbers.contains(myChar[i]) && myChar[i] != '\"' && !(letter.contains(myChar[i]) || numbers.contains(myChar[i]) || _tokenSymbols.contains(myChar[i]) || letterupppercase.contains(myChar[i])))
           {
               System.out.println("LEXICAL ERROR Undefined Symbol: " + myChar[i] +" line number: "+lineNumber+ " in position " + (i) );         
               System.exit(1);
@@ -211,6 +211,7 @@ public static boolean AssciCharBetween32to127(String s) {
           }
         else if (letter.contains(myChar[i])==true||letterupppercase.contains(myChar[i])==true )
           {
+
             if(validLetters.contains(myChar[i])==false)
             {
               System.out.println("LEXICAL ERROR exepected letter "+ " On lineNumber "+ lineNumber);
@@ -226,7 +227,8 @@ public static boolean AssciCharBetween32to127(String s) {
 
           }
           else if(_tokenSymbols.contains(myChar[i]))
-          { if(myChar[i]=='=')
+          {   
+            if(myChar[i]=='=')
             {
               System.out.println("Error! The symbol '=' has no meaning on its own. " + "Must be paired/concatinated with '='  , should be := " );
               System.exit(1);
@@ -234,6 +236,7 @@ public static boolean AssciCharBetween32to127(String s) {
             } 
             else if(myChar[i]==':')
             {
+             
               if(( i+2 <linelength) &&  myChar[i+1]=='=')
               {
                 store=":=";
@@ -285,6 +288,9 @@ public static boolean AssciCharBetween32to127(String s) {
            
 
           }
+          // else{
+          //   System.out.println("------------------------SILLA BY ELSE::::::::::::::::: ");
+          // }
         
 
 
