@@ -7,32 +7,68 @@
                     w(
                     <BOOLEXPR id="4">
                         <LOGIC id="5">
-                            T
+                            <BOOLVAR id="6">
+                                b
+                                <DIGITS id="7">
+                                    <D id="8">
+                                        7
+                                    </D>
+                                </DIGITS>
+                            </BOOLVAR>
                         </LOGIC>
                     </BOOLEXPR>
                     ){
-                    <ALGO id="6">
-                        <INSTR id="7">
-                            <CALL id="8">
-                                cp
-                                <DIGITS id="9">
-                                    <D id="10">
-                                        4
-                                    </D>
-                                    <MORE id="11">
-                                        <DIGITS id="12">
-                                            <D id="13">
-                                                5
-                                            </D>
-                                        </DIGITS>
-                                    </MORE>
-                                </DIGITS>
-                            </CALL>
+                    <ALGO id="9">
+                        <INSTR id="10">
+                            <BRANCH id="11">
+                                i(
+                                <BOOLEXPR id="12">
+                                    <LOGIC id="13">
+                                        <BOOLVAR id="14">
+                                            b
+                                            <DIGITS id="15">
+                                                <D id="16">
+                                                    8
+                                                </D>
+                                            </DIGITS>
+                                        </BOOLVAR>
+                                    </LOGIC>
+                                </BOOLEXPR>
+                                )t{
+                                <ALGO id="17">
+                                    <INSTR id="18">
+                                        <HALT id="19">
+                                            h
+                                        </HALT>
+                                    </INSTR>
+                                    <COMMENT id="20">
+                                        *n6&amp;            *
+                                    </COMMENT>
+                                </ALGO>
+                                }
+                                <ELSE id="21">
+                                    e{
+                                    <ALGO id="22">
+                                        <INSTR id="23">
+                                            <HALT id="24">
+                                                h
+                                            </HALT>
+                                        </INSTR>
+                                    </ALGO>
+                                    }
+                                </ELSE>
+                            </BRANCH>
                         </INSTR>
+                        <COMMENT id="25">
+                            *n6&amp;            *
+                        </COMMENT>
                     </ALGO>
                     }
                 </LOOP>
             </INSTR>
+            <COMMENT id="26">
+                *n6&amp;            *
+            </COMMENT>
         </ALGO>
     </PROGR>
 </PROGRAME>

@@ -108,6 +108,10 @@ public class Parse {
      */
     void GoParse(ArrayList<lexer.token> arrayList) {
         input = arrayList;
+        //print out contents of input
+        // for(int i=0;i<input.size();i++){
+        //     System.out.println("index: "+i+" __________________"+ input.get(i).contents);
+        // }
         // input.add
         // System.out.println("GoParse");
         try {
@@ -272,7 +276,7 @@ public class Parse {
             return;
         } 
          if (pos < input.size() && ((input.get(pos).contents).equals("{") || (input.get(pos).contents).equals(".")
-                || (input.get(pos).contents).equals("*") || (input.get(pos).contents).equals(";")
+                || (input.get(pos)._class).equals("Comment") || (input.get(pos).contents).equals(";")
                 || (input.get(pos).contents).equals(",") || (input.get(pos).contents).equals("}")
                 || (input.get(pos).contents).equals(":=") || (input.get(pos).contents).equals(")"))) { // epsilon follow
                                                                                                        // of more = [{ .
@@ -302,6 +306,7 @@ public class Parse {
         if (pos < input.size() && isDigit(input.get(pos).contents) == true) {
             D.appendChild(doc.createTextNode(input.get(pos).contents));
             nexttoken();
+     
 
         }else if(pos==input.size()){
             return;
@@ -362,12 +367,12 @@ public class Parse {
         if(pos==input.size()){
             return;
         } 
-
+        // System.out.println("comment---------------------------------------");
         if ((pos < input.size() && ((input.get(pos).contents).equals(";") //follow set of comment
                 || (input.get(pos).contents).equals(",")
                 || (input.get(pos).contents).equals("}")))) {
 
-                    return;
+            return;
 
         }
     
@@ -417,8 +422,9 @@ public class Parse {
         Element ASSIGN = createElement(parent, "ASSIGN");
     
         if (pos < input.size() && (input.get(pos).contents).equals("n")) {// n DIGITS
+         
             NUMVAR(ASSIGN);
-
+        
             if (pos < input.size() && (input.get(pos).contents.equals(":="))) {
                 ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
                 nexttoken();
@@ -840,8 +846,9 @@ public class Parse {
             return;
         } 
         Element INT = createElement(parent, "INT");
-    
+  
         if (pos < input.size() && ((isOneorNine(input.get(pos).contents)))) {
+     
             INT.appendChild(doc.createTextNode(input.get(pos).contents));
             nexttoken();
             MORE(INT);
@@ -852,8 +859,9 @@ public class Parse {
     }
 
     private static boolean isOneorNine(String contents) {
+
         boolean status = false;
-        if (contents.length() == 1 && Character.isDigit(contents.charAt(0)) && contents != "0") {
+        if (contents.length() == 1 && Character.isDigit(contents.charAt(0)) && !contents.equals( "0")) {
             status = true;
         }
         return status;
@@ -985,7 +993,7 @@ public class Parse {
         if(pos==input.size()){
             return;
         } 
-        if (pos < input.size() && ((input.get(pos).contents).equals("*") || (input.get(pos).contents).equals(";")
+        if (pos < input.size() && ((input.get(pos)._class).equals("Comment") || (input.get(pos).contents).equals(";")
                 || (input.get(pos).contents).equals(",")
                 || (input.get(pos).contents).equals("}"))) {// follow of else [ * ; , } $]
             return;
