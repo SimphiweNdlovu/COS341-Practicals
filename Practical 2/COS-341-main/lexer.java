@@ -227,7 +227,7 @@ public static boolean AssciCharBetween32to127(String s) {
 
           }
           else if(_tokenSymbols.contains(myChar[i]))
-          {   
+          {  
             if(myChar[i]=='=')
             {
               System.out.println("Error! The symbol '=' has no meaning on its own. " + "Must be paired/concatinated with '='  , should be := " );
@@ -236,8 +236,8 @@ public static boolean AssciCharBetween32to127(String s) {
             } 
             else if(myChar[i]==':')
             {
-             
-              if(( i+2 <linelength) &&  myChar[i+1]=='=')
+              
+              if(( i+1 <linelength) &&  myChar[i+1]=='=')
               {
                 store=":=";
                 Id_num++;
@@ -269,7 +269,7 @@ public static boolean AssciCharBetween32to127(String s) {
           }
           else if(numbers.contains(myChar[i]))
           {
-            if(( i+4 <linelength) &&  myChar[i]=='0' && myChar[i+1]=='.' && myChar[i+2]=='0' &&myChar[i+3]=='0'){
+            if(( i+3 <linelength) &&  myChar[i]=='0' && myChar[i+1]=='.' && myChar[i+2]=='0' &&myChar[i+3]=='0'){
               store="0.00";
               Id_num++;
               token obj=new token(Id_num,"Decimal number", store  ,lineNumber);
