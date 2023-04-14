@@ -199,7 +199,13 @@ public class Parse {
         } else if (pos < input.size() && (input.get(pos).contents).equals("i")) {
             branch(instr);// i(BOOLEXPR)t{ALGO}ELSE
         } else if (pos < input.size() && (input.get(pos).contents).equals("h")) {
-            halt(instr);
+           
+            if (pos < input.size() && (input.get(pos).contents).equals("h")) {
+                instr.appendChild(doc.createTextNode(input.get(pos).contents));
+                instr = addChildTerminalID(instr);
+                nexttoken();
+             
+            }
         } else {
             error("g or  o  or n  or b or s or c or w or i or h");
         }
