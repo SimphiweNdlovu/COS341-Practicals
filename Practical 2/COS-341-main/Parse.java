@@ -313,7 +313,7 @@ public class Parse {
         if (pos < input.size() && ((input.get(pos).contents).equals("{") || (input.get(pos).contents).equals(".")
                 || (input.get(pos)._class).equals("Comment") || (input.get(pos).contents).equals(";")
                 || (input.get(pos).contents).equals(",") || (input.get(pos).contents).equals("}")
-                || (input.get(pos).contents).equals(":=") || (input.get(pos).contents).equals(")"))) { // epsilon follow
+                || (input.get(pos).contents).equals(":") || (input.get(pos).contents).equals(")"))) { // epsilon follow
                                                                                                        // of more = [{ .
                                                                                                        // 0 to 9 := ] //
                                                                                                        // := since
@@ -327,7 +327,7 @@ public class Parse {
 
             digits(MORE);
         } else {
-            error(" 0 to 9   or { or . or :=  or Comment  or ; or , or } or ) or end of file");
+            error(" 0 to 9   or { or . or :  or Comment  or ; or , or } or ) or end of file");
         }
     }
 
@@ -450,17 +450,13 @@ public class Parse {
                 PROC.appendChild(doc.createTextNode(input.get(pos).contents));
                 PROC = addChildTerminalID(PROC);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+               
                 progr(PROC);
                 if (pos < input.size() && (input.get(pos).contents).equals("}")) {
                     PROC.appendChild(doc.createTextNode(input.get(pos).contents));
                     PROC = addChildTerminalID(PROC);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                  
                 } else {
                     error("}");
                 }
@@ -480,48 +476,66 @@ public class Parse {
         Element ASSIGN = createElement(parent, "ASSIGN");
 
         if (pos < input.size() && (input.get(pos).contents).equals("n")) {// n DIGITS
-
+          
             NUMVAR(ASSIGN);
-
-            if (pos < input.size() && (input.get(pos).contents.equals(":="))) {
+        
+            if (pos < input.size() && (input.get(pos).contents.equals(":"))) {
                 ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
                 ASSIGN = addChildTerminalID(ASSIGN);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+               if(pos < input.size() && (input.get(pos).contents.equals("="))) {
+                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
+                ASSIGN = addChildTerminalID(ASSIGN);
+                nexttoken();
                 NUMEXPR(ASSIGN);
+               }else {
+                   error("=");
+               }
+             
             } else {
-                error(" := ");
+                error(" : ");
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("b"))) {
             BOOLVAR(ASSIGN);
-            if (pos < input.size() && (input.get(pos).contents.equals(":="))) {
+            if (pos < input.size() && (input.get(pos).contents.equals(":"))) {
                 ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
                 ASSIGN = addChildTerminalID(ASSIGN);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+              if(pos < input.size() && (input.get(pos).contents.equals("="))) {
+                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
+                ASSIGN = addChildTerminalID(ASSIGN);
+                nexttoken();
                 BOOLEXPR(ASSIGN);
+              }else {
+                  error("=");
+              }
+
+               
             } else {
-                error(" := ");
+                error(" :");
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("s"))) {
             STRINGV(ASSIGN);
 
-            if (pos < input.size() && (input.get(pos).contents.equals(":="))) {
+            if (pos < input.size() && (input.get(pos).contents.equals(":"))) {
                 ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
                 ASSIGN = addChildTerminalID(ASSIGN);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
+                if(pos < input.size() && (input.get(pos).contents.equals("="))) {
+                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
+                ASSIGN = addChildTerminalID(ASSIGN);
+                nexttoken();
+                    STRI(ASSIGN);
                 }
-                STRI(ASSIGN);
+                else {
+                    error("=");
+                }
+
+                
             } else {
-                error(" := ");
+                error(" : ");
             }
 
         } else {
@@ -583,30 +597,20 @@ public class Parse {
                 CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                 CMPR = addChildTerminalID(CMPR);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+             
                 NUMEXPR(CMPR);
 
-                // nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                     CMPR = addChildTerminalID(CMPR);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+               
                     NUMEXPR(CMPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                         CMPR = addChildTerminalID(CMPR);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                      
                     } else {
                         error(" ) ");
                     }
@@ -628,30 +632,21 @@ public class Parse {
                 CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                 CMPR = addChildTerminalID(CMPR);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+            
                 NUMEXPR(CMPR);
 
-                // nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+          
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                     CMPR = addChildTerminalID(CMPR);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                    
                     NUMEXPR(CMPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                         CMPR = addChildTerminalID(CMPR);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                       
                     } else {
                         error(" ) ");
                     }
@@ -673,30 +668,21 @@ public class Parse {
                 CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                 CMPR = addChildTerminalID(CMPR);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+             
                 NUMEXPR(CMPR);
 
-                // nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+         
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                     CMPR = addChildTerminalID(CMPR);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+             
                     NUMEXPR(CMPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
                         CMPR = addChildTerminalID(CMPR);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                     
                     } else {
                         error(" ) ");
                     }
@@ -745,26 +731,20 @@ public class Parse {
                 LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                 LOGIC = addChildTerminalID(LOGIC);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+           
                 BOOLEXPR(LOGIC);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                     LOGIC = addChildTerminalID(LOGIC);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                
                     BOOLEXPR(LOGIC);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                         LOGIC = addChildTerminalID(LOGIC);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                   
                     } else {
                         error(" ) ");
                     }
@@ -786,26 +766,20 @@ public class Parse {
                 LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                 LOGIC = addChildTerminalID(LOGIC);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+         
                 BOOLEXPR(LOGIC);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                     LOGIC = addChildTerminalID(LOGIC);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+              
                     BOOLEXPR(LOGIC);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                         LOGIC = addChildTerminalID(LOGIC);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                    
                     } else {
                         error(" ) ");
                     }
@@ -827,18 +801,14 @@ public class Parse {
                 LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                 LOGIC = addChildTerminalID(LOGIC);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+              
                 BOOLEXPR(LOGIC);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                     LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
                     LOGIC = addChildTerminalID(LOGIC);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+               
                 } else {
                     error(" ) ");
                 }
@@ -885,30 +855,21 @@ public class Parse {
                 NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                 NUMEXPR = addChildTerminalID(NUMEXPR);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+            
                 NUMEXPR(NUMEXPR);
 
-                // nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+          
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                     NUMEXPR = addChildTerminalID(NUMEXPR);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+              
                     NUMEXPR(NUMEXPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                         NUMEXPR = addChildTerminalID(NUMEXPR);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                      
                     } else {
                         error(" ) ");
                     }
@@ -931,30 +892,21 @@ public class Parse {
                 NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                 NUMEXPR = addChildTerminalID(NUMEXPR);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+             
                 NUMEXPR(NUMEXPR);
 
-                // nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                     NUMEXPR = addChildTerminalID(NUMEXPR);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                  
                     NUMEXPR(NUMEXPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                         NUMEXPR = addChildTerminalID(NUMEXPR);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                       
                     } else {
                         error(" ) ");
                     }
@@ -977,30 +929,21 @@ public class Parse {
                 NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                 NUMEXPR = addChildTerminalID(NUMEXPR);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+               
                 NUMEXPR(NUMEXPR);
 
-                // nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+               
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
                     NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                     NUMEXPR = addChildTerminalID(NUMEXPR);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                   
                     NUMEXPR(NUMEXPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                         NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
                         NUMEXPR = addChildTerminalID(NUMEXPR);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                       
                     } else {
                         error(" ) ");
                     }
@@ -1127,9 +1070,7 @@ public class Parse {
                 CALL.appendChild(doc.createTextNode(input.get(pos).contents));
                 CALL = addChildTerminalID(CALL);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+                
                 digits(CALL);
 
             } else {
@@ -1157,34 +1098,26 @@ public class Parse {
                 LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
                 LOOP = addChildTerminalID(LOOP);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+               
                 BOOLEXPR(LOOP);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                     LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
                     LOOP = addChildTerminalID(LOOP);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                   
                     if (pos < input.size() && (input.get(pos).contents.equals("{"))) {
                         LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
                         LOOP = addChildTerminalID(LOOP);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                       
                         algo(LOOP);
 
                         if (pos < input.size() && (input.get(pos).contents.equals("}"))) {
                             LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
                             LOOP = addChildTerminalID(LOOP);
                             nexttoken();
-                            if (pos >= input.size()) {
-                                return;
-                            }
+                            
                         } else {
                             error(" } ");
                         }
@@ -1220,41 +1153,31 @@ public class Parse {
                 BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
                 BRANCH = addChildTerminalID(BRANCH);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+                
                 BOOLEXPR(BRANCH);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
                     BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
                     BRANCH = addChildTerminalID(BRANCH);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                   
                     if (pos < input.size() && (input.get(pos).contents.equals("t"))) {
                         BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
                         BRANCH = addChildTerminalID(BRANCH);
                         nexttoken();
-                        if (pos >= input.size()) {
-                            return;
-                        }
+                        
                         if (pos < input.size() && (input.get(pos).contents.equals("{"))) {
                             BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
                             BRANCH = addChildTerminalID(BRANCH);
                             nexttoken();
-                            if (pos >= input.size()) {
-                                return;
-                            }
+                           
                             algo(BRANCH);
 
                             if (pos < input.size() && (input.get(pos).contents.equals("}"))) {
                                 BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
                                 BRANCH = addChildTerminalID(BRANCH);
                                 nexttoken();
-                                if (pos >= input.size()) {
-                                    return;
-                                }
+                               
 
                                 ELSE(BRANCH);
                             } else {
@@ -1305,18 +1228,14 @@ public class Parse {
                 ELSE.appendChild(doc.createTextNode(input.get(pos).contents));
                 ELSE = addChildTerminalID(ELSE);
                 nexttoken();
-                if (pos >= input.size()) {
-                    return;
-                }
+                
                 algo(ELSE);
 
                 if (pos < input.size() && (input.get(pos).contents.equals("}"))) {
                     ELSE.appendChild(doc.createTextNode(input.get(pos).contents));
                     ELSE = addChildTerminalID(ELSE);
                     nexttoken();
-                    if (pos >= input.size()) {
-                        return;
-                    }
+                   
 
                 } else {
                     error(" } ");
