@@ -53,7 +53,7 @@ public class lexer {
     Character[] numbers1 = new Character[] { '0', '2', '1', '3', '4', '5', '6', '7', '8', '9' };
     Character[] validletters = new Character[] { 'p', 'h', 'c', 'w', 'i', 'e', 'n', 'b', 's', 'a', 'm', 'd', 'T', 'F',
         'v', 'E', 'g', 'o', 'r', 't' };
-    System.out.println("valid letters" + validletters.length);
+    // System.out.println("valid letters" + validletters.length);
 
     Character tokenSymbols[] = { ';', '{', '}', '(', ')', ',', '-', '^', '<', '>', '!', '.', ':', '=' };
 
@@ -78,7 +78,7 @@ public class lexer {
       while (sc.hasNextLine()) {
         String str = sc.nextLine();
 
-        System.out.println(str);
+        // System.out.println(str);
         char[] myChar = str.toCharArray();
         int linelength = myChar.length;
         // do something
@@ -120,8 +120,8 @@ public class lexer {
                     Validtokens.add(obj);
                     OutputArr_Count++;
                     i = ii; // updating the curser
-                    System.out.println(
-                        "( Token number: " + (Id_num) + " ,Short String, " + store + ")   line number:" + lineNumber);
+                    // System.out.println(
+                    //     "( Token number: " + (Id_num) + " ,Short String, " + store + ")   line number:" + lineNumber);
                     break;
                   } else {
                     System.out.println(
@@ -169,8 +169,8 @@ public class lexer {
                     Validtokens.add(obj);
                     OutputArr_Count++;
                     i = ii; // updating the curser
-                    System.out.println(
-                        "( Token number: " + (Id_num) + " ,Comment, " + store + ")   line number:" + lineNumber);
+                    // System.out.println(
+                        // "( Token number: " + (Id_num) + " ,Comment, " + store + ")   line number:" + lineNumber);
                     break;
                   } else {
                     System.out
@@ -207,41 +207,20 @@ public class lexer {
             token obj = new token(Id_num, "Letter", store, lineNumber);
             Validtokens.add(obj);
 
-            System.out
-                .println("( Token number: " + (Id_num) + " ,Letter, " + myChar[i] + ")   line number:" + lineNumber);
+            // System.out
+            //     .println("( Token number: " + (Id_num) + " ,Letter, " + myChar[i] + ")   line number:" + lineNumber);
 
           } else if (_tokenSymbols.contains(myChar[i])) {
-            if (myChar[i] == '=') {
-              System.out.println("Error! The symbol '=' has no meaning on its own. "
-                  + "Must be paired/concatinated with '='  , should be := ");
-              System.exit(1);
-
-            } else if (myChar[i] == ':') {
-
-              if ((i + 1 < linelength) && myChar[i + 1] == '=') {
-                store = ":=";
-                Id_num++;
-                token obj = new token(Id_num, "token_assignOperator", store, lineNumber);
-                Validtokens.add(obj);
-                System.out.println("( Token " + (Id_num) + " , token_assignOperator, := )");
-
-                i = i + 1;
-              } else if ((i + 1 < linelength) && myChar[i + 1] == ' ') {
-                System.out.println("Error! The symbol ':' has no meaning on its own. "
-                    + "Must be paired/concatinated with '=' , should be := ");
-                System.exit(1);
-                i += 1;
-              }
-            } else {
+            
               store = "";
               store += myChar[i];
               Id_num++;
               token obj = new token(Id_num, "tokenSymbol", store, lineNumber);
               Validtokens.add(obj);
 
-              System.out.println("( Token: " + Id_num + ",tokenSymbol, " + store + " ) ");
+              // System.out.println("( Token: " + Id_num + ",tokenSymbol, " + store + " ) ");
 
-            }
+          
 
           } else if (numbers.contains(myChar[i])) {
             if ((i + 3 < linelength) && myChar[i] == '0' && myChar[i + 1] == '.') {
@@ -250,7 +229,7 @@ public class lexer {
                 Id_num++;
                 token obj = new token(Id_num, "Decimal number", store, lineNumber);
                 Validtokens.add(obj);
-                System.out.println("( Token " + (Id_num) + " ,Decimal number, " + store + " )");
+                // System.out.println("( Token " + (Id_num) + " ,Decimal number, " + store + " )");
                 i = i + 3;
 
               } else {
@@ -264,22 +243,18 @@ public class lexer {
               Id_num++;
               token obj = new token(Id_num, "Digits", store, lineNumber);
               Validtokens.add(obj);
-              System.out.println("( Token " + (Id_num) + " ,Digits, " + store + " )");
+              // System.out.println("( Token " + (Id_num) + " ,Digits, " + store + " )");
             }
 
           }
-          // else{
-          // System.out.println("------------------------SILLA BY ELSE:::::::::::::::::
-          // ");
-          // }
-
+     
           store = "";
         }
-        System.out.println();
-        System.out.println("#############################################");
-        System.out.println("Line number: " + lineNumber + " Done.");
-        System.out.println();
-        System.out.println();
+        // System.out.println();
+        // System.out.println("#############################################");
+        // System.out.println("Line number: " + lineNumber + " Done.");
+        // System.out.println();
+        // System.out.println();
 
         lineNumber++;
       }
