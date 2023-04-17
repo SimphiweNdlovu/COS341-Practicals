@@ -963,8 +963,7 @@ public class Parse {
          
             digits(NUMEXPR);
 
-        } else if (pos < input.size() && ((input.get(pos).contents.equals("0.00"))
-                || (input.get(pos).contents.equals("-")) || (isOneorNine(input.get(pos).contents)))) {
+        } else if (pos < input.size() && ( (input.get(pos).contents.equals("-")) || (Character.isDigit(input.get(pos).contents.charAt(0))))) {
             DECNUM(NUMEXPR);
 
         } else {
@@ -979,10 +978,35 @@ public class Parse {
 
         Element DECNUM = createElement(parent, "DECNUM");
 
-        if (pos < input.size() && ((input.get(pos).contents.equals("0.00")))) {
+        if (pos < input.size() && ((input.get(pos).contents.equals("0")))) {
             DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
             DECNUM = addChildTerminalID(DECNUM);
             nexttoken();
+            if(pos < input.size() && ((input.get(pos).contents.equals(".")))){
+                DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
+                DECNUM = addChildTerminalID(DECNUM);
+                nexttoken();
+               
+                if(pos < input.size() && ((input.get(pos).contents.equals("0")))){
+                    DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
+                    DECNUM = addChildTerminalID(DECNUM);
+                    nexttoken();
+                    if(pos < input.size() && ((input.get(pos).contents.equals("0")))){
+                        DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
+                        DECNUM = addChildTerminalID(DECNUM);
+                        nexttoken();
+                    }
+                    else{
+                        error("0");
+                    }
+                }
+                else{
+                    error("0");
+                }
+            }
+            else{
+                error(" . ");
+            }
          
 
         } else if (pos < input.size() && ((input.get(pos).contents.equals("-")))) {
