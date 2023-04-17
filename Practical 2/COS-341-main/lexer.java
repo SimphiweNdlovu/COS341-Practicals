@@ -142,7 +142,7 @@ public class lexer {
               }
             }
             if (store.charAt(store.length() - 1) != '\"') {
-              System.out.println("LEXICAL ERROR exepected short string  with no second inveted comma "
+              System.out.println("LEXICAL ERROR found a short string  with no second inveted comma "
                   + " On lineNumber " + lineNumber);
               System.exit(1);
             }
@@ -191,7 +191,7 @@ public class lexer {
               }
             }
             if (store.charAt(store.length() - 1) != '*') {
-              System.out.println("LEXICAL ERROR exepected short string  with no second inveted comma "
+              System.out.println("LEXICAL ERROR found a Comment  with no second  * "
                   + " On lineNumber " + lineNumber);
               System.exit(1);
             }
@@ -223,28 +223,14 @@ public class lexer {
           
 
           } else if (numbers.contains(myChar[i])) {
-            if ((i + 3 < linelength) && myChar[i] == '0' && myChar[i + 1] == '.') {
-              if (myChar[i + 2] == '0' && myChar[i + 3] == '0') {
-                store = "0.00";
-                Id_num++;
-                token obj = new token(Id_num, "Decimal number", store, lineNumber);
-                Validtokens.add(obj);
-                // System.out.println("( Token " + (Id_num) + " ,Decimal number, " + store + " )");
-                i = i + 3;
-
-              } else {
-                System.out.println("LEXICAL ERROR exepected 0.00 " + " On lineNumber " + lineNumber);
-                System.exit(1);
-              }
-
-            } else {
+            
               store = "";
               store += myChar[i];
               Id_num++;
               token obj = new token(Id_num, "Digits", store, lineNumber);
               Validtokens.add(obj);
               // System.out.println("( Token " + (Id_num) + " ,Digits, " + store + " )");
-            }
+            
 
           }
      
