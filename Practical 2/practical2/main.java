@@ -10,6 +10,7 @@ public class main
     ArrayList<lexer.token> arrayList = new ArrayList<lexer.token>();
     arrayList= obj.c_lexer();
     obj1.GoParse(arrayList);
+    
   }
 
 }
