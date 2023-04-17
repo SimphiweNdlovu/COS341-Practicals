@@ -1293,7 +1293,7 @@ public class Parse {
     private static void nexttoken() {
 
         if (pos < (input.size())) {
-            System.out.println("___________________________" + input.get(pos).contents);
+            // System.out.println("___________________________" + input.get(pos).contents);
             pos++;
         }
 
