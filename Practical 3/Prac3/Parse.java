@@ -15,7 +15,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -31,7 +31,8 @@ public class Parse {
     static int idCounter = 0;
     static Document doc;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
+    static int id;
+    static node root;
     /*
      * PROGR ::= ALGO PROCDEFS
      * PROCDEFS ::= , PROC PROCDEFS
@@ -116,24 +117,24 @@ public class Parse {
         // input.add
         // System.out.println("GoParse");
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            doc = builder.newDocument();
+            // DocumentBuilder builder = factory.newDocumentBuilder();
+            // doc = builder.newDocument();
             // Parse the program and build the XML tree
-            Element programNode = null;
+            node programNode = null;
 
             progr(programNode);
             if (pos != input.size()) {
 
                 error("end of a file");
             }
-
+            PRINTTREE(root);
             // Output the XML tree to a file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); // set indentation to yes
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("output.xml"));
-            transformer.transform(source, result);
+            // TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            // Transformer transformer = transformerFactory.newTransformer();
+            // transformer.setOutputProperty(OutputKeys.INDENT, "yes"); // set indentation to yes
+            // DOMSource source = new DOMSource(doc);
+            // StreamResult result = new StreamResult(new File("output.xml"));
+            // transformer.transform(source, result);
 
             System.out.println("Program successfully parsed!");
         } catch (Exception e) {
@@ -141,43 +142,71 @@ public class Parse {
         }
 
     }
-// To do must remove the hult function
-    private static void progr(Element parent) {
-        Element progr=null;
+private void PRINTTREE(node node) {
+    if(node==null){
+        return;
+    }
+    if(node.type.equals("Non-Terminal")){
+        System.out.println("name: "+node.name+" id: "+node.id +" childrea: ");
+        for(int i=0;i<node.children.size();i++){
+            System.out.println(node.children.get(i).id +" ");
+        }
+
+        for(int ii=0;ii<node.children.size();ii++){
+            PRINTTREE(node.children.get(ii));
+        }
+
+
+    }
+    else if(node.type.equals("Terminal")){
+        System.out.println(" terminal: "+ node.name);
+        PRINTTREE(null);
+    }
+
+
+    }
+    // To do must remove the hult function
+    private static void progr(node parent) {
+      
         if (pos >= input.size()) {
             error("g or  o  or n  or b or s or c or w or i or h");
         }
         if(parent==null){
-            progr=doc.createElement("PROGR");
-            progr.setAttribute("id", "" + idCounter++);
-            doc.appendChild(progr);
+            root=new node("PROGR");
+            root.type="Non-Terminal";
+            root.setId(id++);
+            algo(root);
+            procdefs(root);
+          
         }else{
-            progr=createElement(parent, "PROGR");
-        }
-        // Element progr = createElement(parent, "PROGR");
+            node progr=createNode(parent, "PROGR");
 
-        algo(progr);
-        procdefs(progr);
+            algo(progr);
+            procdefs(progr);
+        }
+        // node progr = createNode(parent, "PROGR");
+
+       
     }
 
-    private static void algo(Element parent) {
+    private static void algo(node parent) {
         if (pos >= input.size()) {
             error("g or  o  or n  or b or s or c or w or i or h");
         }
 
-        Element algo = createElement(parent, "ALGO");
+        node algo = createNode(parent, "ALGO");
 
         instr(algo);
         comment(algo);
         seq(algo);
     }
 
-    private static void instr(Element parent) {
+    private static void instr(node parent) {
         if (pos >= input.size()) {
             error("g or  o  or n  or b or s or c or w or i or h");
         }
 
-        Element instr = createElement(parent, "INSTR");
+        node instr = createNode(parent, "INSTR");
 
         if (pos < input.size() && (input.get(pos).contents).equals("g")) {// g NUMVAR // The g stands for getting a
                                                                           // number from
@@ -201,8 +230,8 @@ public class Parse {
         } else if (pos < input.size() && (input.get(pos).contents).equals("h")) {
            
             if (pos < input.size() && (input.get(pos).contents).equals("h")) {
-                instr.appendChild(doc.createTextNode(input.get(pos).contents));
-                instr = addChildTerminalID(instr);
+            
+                instr = addChildTerminalID(instr,input.get(pos).contents);
                 nexttoken();
              
             }
@@ -211,12 +240,12 @@ public class Parse {
         }
     }
 
-    private static void output(Element parent) {
+    private static void output(node parent) {
 
         if (pos >= input.size()) {
             error(" o or r ");
         }
-        Element output = createElement(parent, "OUTPUT");
+        node output = createNode(parent, "OUTPUT");
 
         if (pos < input.size() && input.get(pos).contents.equals("o")) { // value
             
@@ -230,38 +259,38 @@ public class Parse {
         }
     }
 
-    private static void TEXT(Element parent) {
+    private static void TEXT(node parent) {
         if (pos >= input.size()) {
             error(" r ");
         }
-        Element TEXT = createElement(parent, "TEXT");
-        TEXT.appendChild(doc.createTextNode("r"));
-        TEXT = addChildTerminalID(TEXT);
+        node TEXT = createNode(parent, "TEXT");
+      
+        TEXT = addChildTerminalID(TEXT,input.get(pos).contents);
         nexttoken();
             
         STRINGV(TEXT);
     }
-    private static void VALUE(Element parent) {
+    private static void VALUE(node parent) {
         if (pos >= input.size()) {
             error(" o ");
         }
-        Element VALUE = createElement(parent, "VALUE");
-        VALUE.appendChild(doc.createTextNode("o"));
-        VALUE = addChildTerminalID(VALUE);
+        node VALUE = createNode(parent, "VALUE");
+      
+        VALUE = addChildTerminalID(VALUE,input.get(pos).contents);
         nexttoken();
 
         NUMVAR(VALUE);
     }
-    private static void STRINGV(Element parent) {
+    private static void STRINGV(node parent) {
         if (pos >= input.size()) {
             error(" s ");
         }
 
-        Element STRINGV = createElement(parent, "STRINGV");
+        node STRINGV = createNode(parent, "STRINGV");
 
         if (pos < input.size() && input.get(pos).contents.equals("s")) {
-            STRINGV.appendChild(doc.createTextNode("s"));
-            STRINGV = addChildTerminalID(STRINGV);
+  
+            STRINGV = addChildTerminalID(STRINGV,input.get(pos).contents);
             nexttoken();
          
             digits(STRINGV);
@@ -270,16 +299,16 @@ public class Parse {
         }
     }
 
-    private static void input(Element parent) {
+    private static void input(node parent) {
         if (pos >= input.size()) {
             error(" g ");
         }
 
-        Element INPUT = createElement(parent, "INPUT");
+        node INPUT = createNode(parent, "INPUT");
 
         if (pos < input.size() && input.get(pos).contents.equals("g")) {
-            INPUT.appendChild(doc.createTextNode("g"));
-            INPUT = addChildTerminalID(INPUT);
+          
+            INPUT = addChildTerminalID(INPUT,input.get(pos).contents);
             nexttoken();
          
 
@@ -289,16 +318,16 @@ public class Parse {
         }
     }
 
-    private static void NUMVAR(Element parent) {
+    private static void NUMVAR(node parent) {
 
         if (pos >= input.size()) {
             error(" n ");
         }
-        Element NUMVAR = createElement(parent, "NUMVAR");
+        node NUMVAR = createNode(parent, "NUMVAR");
 
         if (pos < input.size() && input.get(pos).contents.equals("n")) {
-            NUMVAR.appendChild(doc.createTextNode("n"));
-            NUMVAR = addChildTerminalID(NUMVAR);
+         
+            NUMVAR = addChildTerminalID(NUMVAR,input.get(pos).contents);
             nexttoken();
          
             digits(NUMVAR);
@@ -309,12 +338,12 @@ public class Parse {
 
     // { 0 to 9 .
 
-    private static void digits(Element parent) {
+    private static void digits(node parent) {
 
         if (pos >= input.size()) {
             error("0 ... 9");
         }
-        Element DIGITS = createElement(parent, "DIGITS");
+        node DIGITS = createNode(parent, "DIGITS");
 
         // any numbur from 0 to 9
         D(DIGITS);
@@ -322,7 +351,7 @@ public class Parse {
 
     }
 
-    private static void MORE(Element parent) {
+    private static void MORE(node parent) {
         if (pos >= input.size()) {
             return;
         }
@@ -338,7 +367,7 @@ public class Parse {
             return;
 
         }
-        Element MORE = createElement(parent, "MORE");
+        node MORE = createNode(parent, "MORE");
 
         if (pos < input.size() && isDigit(input.get(pos).contents) == true) {
 
@@ -348,16 +377,16 @@ public class Parse {
         }
     }
 
-    private static void D(Element parent) {
+    private static void D(node parent) {
         if (pos >= input.size()) {
             error("0 ... 9");
         }
 
-        Element D = createElement(parent, "D");
+        node D = createNode(parent, "D");
 
         if (pos < input.size() && isDigit(input.get(pos).contents) == true) {
-            D.appendChild(doc.createTextNode(input.get(pos).contents));
-            D = addChildTerminalID(D);
+    
+            D = addChildTerminalID(D,input.get(pos).contents);
             nexttoken();
          
 
@@ -375,7 +404,7 @@ public class Parse {
         return str.length() == 1 && Character.isDigit(str.charAt(0));
     }
 
-    private static void seq(Element parent) {
+    private static void seq(node parent) {
         if (pos >= input.size()) {
             return;
         }
@@ -385,11 +414,11 @@ public class Parse {
             return;
 
         }
-        Element SEQ = createElement(parent, "SEQ");
+        node SEQ = createNode(parent, "SEQ");
 
         if (pos < input.size() && (input.get(pos).contents).equals(";")) {
-            SEQ.appendChild(doc.createTextNode(input.get(pos).contents));
-            SEQ = addChildTerminalID(SEQ);
+       
+            SEQ = addChildTerminalID(SEQ,input.get(pos).contents);
             nexttoken();
          
             algo(SEQ);
@@ -398,7 +427,7 @@ public class Parse {
         }
     }
 
-    private static void procdefs(Element parent) {
+    private static void procdefs(node parent) {
         if (pos >= input.size()) {
             return;
         }
@@ -409,11 +438,11 @@ public class Parse {
             return;
 
         }
-        Element PROCDEFS = createElement(parent, "PROCDEFS");
+        node PROCDEFS = createNode(parent, "PROCDEFS");
 
         if (pos < input.size() && ((input.get(pos).contents).equals(","))) {
-            PROCDEFS.appendChild(doc.createTextNode(input.get(pos).contents));
-            PROCDEFS = addChildTerminalID(PROCDEFS);
+       
+            PROCDEFS = addChildTerminalID(PROCDEFS,input.get(pos).contents);
             nexttoken();
          
             proc(PROCDEFS);
@@ -423,7 +452,7 @@ public class Parse {
         }
     }
 
-    private static void comment(Element parent) {
+    private static void comment(node parent) {
         if (pos >= input.size()) {
             return;
         }
@@ -437,11 +466,11 @@ public class Parse {
 
         }
 
-        Element COMMENT = createElement(parent, "COMMENT");
+        node COMMENT = createNode(parent, "COMMENT");
 
         if (pos < input.size() && (input.get(pos)._class).equals("Comment")) {
-            COMMENT.appendChild(doc.createTextNode(input.get(pos).contents));
-            COMMENT = addChildTerminalID(COMMENT);
+         
+            COMMENT = addChildTerminalID(COMMENT,input.get(pos).contents);
             nexttoken();
          
         } else {
@@ -449,29 +478,29 @@ public class Parse {
         }
     }
 
-    private static void proc(Element parent) {
+    private static void proc(node parent) {
         if (pos >= input.size()) {
            error("p");
         }
 
-        Element PROC = createElement(parent, "PROC");
+        node PROC = createNode(parent, "PROC");
 
         if (pos < input.size() && (input.get(pos).contents).equals("p")) {
-            PROC.appendChild(doc.createTextNode(input.get(pos).contents));
-            PROC = addChildTerminalID(PROC);
+          
+            PROC = addChildTerminalID(PROC,input.get(pos).contents);
             nexttoken();
          
 
             digits(PROC);
             if (pos < input.size() && (input.get(pos).contents).equals("{")) {
-                PROC.appendChild(doc.createTextNode(input.get(pos).contents));
-                PROC = addChildTerminalID(PROC);
+             
+                PROC = addChildTerminalID(PROC,input.get(pos).contents);
                 nexttoken();
                
                 progr(PROC);
                 if (pos < input.size() && (input.get(pos).contents).equals("}")) {
-                    PROC.appendChild(doc.createTextNode(input.get(pos).contents));
-                    PROC = addChildTerminalID(PROC);
+                 
+                    PROC = addChildTerminalID(PROC,input.get(pos).contents);
                     nexttoken();
                   
                 } else {
@@ -485,24 +514,24 @@ public class Parse {
         }
     }
 
-    private static void assign(Element parent) {
+    private static void assign(node parent) {
         if (pos >= input.size()) {
             error(" n or b or s");
         }
 
-        Element ASSIGN = createElement(parent, "ASSIGN");
+        node ASSIGN = createNode(parent, "ASSIGN");
 
         if (pos < input.size() && (input.get(pos).contents).equals("n")) {// n DIGITS
           
             NUMVAR(ASSIGN);
         
             if (pos < input.size() && (input.get(pos).contents.equals(":"))) {
-                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
-                ASSIGN = addChildTerminalID(ASSIGN);
+         
+                ASSIGN = addChildTerminalID(ASSIGN,input.get(pos).contents);
                 nexttoken();
                if(pos < input.size() && (input.get(pos).contents.equals("="))) {
-                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
-                ASSIGN = addChildTerminalID(ASSIGN);
+             
+                ASSIGN = addChildTerminalID(ASSIGN,input.get(pos).contents);
                 nexttoken();
                 NUMEXPR(ASSIGN);
                }else {
@@ -516,12 +545,12 @@ public class Parse {
         } else if (pos < input.size() && (input.get(pos).contents.equals("b"))) {
             BOOLVAR(ASSIGN);
             if (pos < input.size() && (input.get(pos).contents.equals(":"))) {
-                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
-                ASSIGN = addChildTerminalID(ASSIGN);
+            
+                ASSIGN = addChildTerminalID(ASSIGN,input.get(pos).contents);
                 nexttoken();
               if(pos < input.size() && (input.get(pos).contents.equals("="))) {
-                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
-                ASSIGN = addChildTerminalID(ASSIGN);
+               
+                ASSIGN = addChildTerminalID(ASSIGN,input.get(pos).contents);
                 nexttoken();
                 BOOLEXPR(ASSIGN);
               }else {
@@ -537,12 +566,12 @@ public class Parse {
             STRINGV(ASSIGN);
 
             if (pos < input.size() && (input.get(pos).contents.equals(":"))) {
-                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
-                ASSIGN = addChildTerminalID(ASSIGN);
+             
+                ASSIGN = addChildTerminalID(ASSIGN,input.get(pos).contents);
                 nexttoken();
                 if(pos < input.size() && (input.get(pos).contents.equals("="))) {
-                ASSIGN.appendChild(doc.createTextNode(input.get(pos).contents));
-                ASSIGN = addChildTerminalID(ASSIGN);
+              
+                ASSIGN = addChildTerminalID(ASSIGN,input.get(pos).contents);
                 nexttoken();
                     STRI(ASSIGN);
                 }
@@ -560,15 +589,15 @@ public class Parse {
         }
     }
 
-    private static void STRI(Element parent) {
+    private static void STRI(node parent) {
         if (pos >= input.size()) {
             error(" Shortstring");
         }
-        Element STRI = createElement(parent, "STRI");
+        node STRI = createNode(parent, "STRI");
 
         if (pos < input.size() && (input.get(pos)._class.equals("Shotstring"))) {
-            STRI.appendChild(doc.createTextNode(input.get(pos).contents));
-            STRI = addChildTerminalID(STRI);
+           
+            STRI = addChildTerminalID(STRI,input.get(pos).contents);
             nexttoken();
          
         } else {
@@ -576,12 +605,12 @@ public class Parse {
         }
     }
 
-    private static void BOOLEXPR(Element parent) {
+    private static void BOOLEXPR(node parent) {
         if (pos >= input.size()) {
             error(" b or T or F or ^ or v or ! or E or < or >");
         }
 
-        Element BOOLEXPR = createElement(parent, "BOOLEXPR");
+        node BOOLEXPR = createNode(parent, "BOOLEXPR");
 
         if (pos < input.size() && ((input.get(pos).contents.equals("b")) || (input.get(pos).contents.equals("T"))
                 || (input.get(pos).contents.equals("F")) || (input.get(pos).contents.equals("^"))
@@ -598,34 +627,34 @@ public class Parse {
 
     }
 
-    private static void CMPR(Element parent) {
+    private static void CMPR(node parent) {
         if (pos >= input.size()) {
             error("E or < or >");
         }
 
-        Element CMPR = createElement(parent, "CMPR");
+        node CMPR = createNode(parent, "CMPR");
 
         if (pos < input.size() && ((input.get(pos).contents.equals("E")))) {
-            CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            CMPR = addChildTerminalID(CMPR);
+      
+            CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                CMPR = addChildTerminalID(CMPR);
+            
+                CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                 nexttoken();
              
                 NUMEXPR(CMPR);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                    CMPR = addChildTerminalID(CMPR);
+                  
+                    CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                     nexttoken();
                
                     NUMEXPR(CMPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                        CMPR = addChildTerminalID(CMPR);
+                    
+                        CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                         nexttoken();
                       
                     } else {
@@ -641,27 +670,27 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("<"))) {
-            CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            CMPR = addChildTerminalID(CMPR);
+
+            CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                CMPR = addChildTerminalID(CMPR);
+       
+                CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                 nexttoken();
             
                 NUMEXPR(CMPR);
 
           
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                    CMPR = addChildTerminalID(CMPR);
+                 
+                    CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                     nexttoken();
                     
                     NUMEXPR(CMPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                        CMPR = addChildTerminalID(CMPR);
+                    
+                        CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                         nexttoken();
                        
                     } else {
@@ -677,27 +706,27 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals(">"))) {
-            CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            CMPR = addChildTerminalID(CMPR);
+       
+            CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                CMPR = addChildTerminalID(CMPR);
+     
+                CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                 nexttoken();
              
                 NUMEXPR(CMPR);
 
          
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                    CMPR = addChildTerminalID(CMPR);
+                   
+                    CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                     nexttoken();
              
                     NUMEXPR(CMPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        CMPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                        CMPR = addChildTerminalID(CMPR);
+                     
+                        CMPR = addChildTerminalID(CMPR,input.get(pos).contents);
                         nexttoken();
                      
                     } else {
@@ -717,49 +746,49 @@ public class Parse {
         }
     }
 
-    private static void LOGIC(Element parent) {
+    private static void LOGIC(node parent) {
         if (pos >= input.size()) {
             error("b or T or F or ^ or v or !");
         }
 
-        Element LOGIC = createElement(parent, "LOGIC");
+        node LOGIC = createNode(parent, "LOGIC");
 
         if (pos < input.size() && ((input.get(pos).contents.equals("b")))) {
             BOOLVAR(LOGIC);
 
         } else if ((input.get(pos).contents.equals("T"))) {
-            LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-            LOGIC = addChildTerminalID(LOGIC);
+        
+            LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
             nexttoken();
          
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("F"))) {
-            LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-            LOGIC = addChildTerminalID(LOGIC);
+         
+            LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
             nexttoken();
          
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("^"))) {
-            LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-            LOGIC = addChildTerminalID(LOGIC);
+           
+            LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                LOGIC = addChildTerminalID(LOGIC);
+              
+                LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                 nexttoken();
            
                 BOOLEXPR(LOGIC);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                    LOGIC = addChildTerminalID(LOGIC);
+        
+                    LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                     nexttoken();
                 
                     BOOLEXPR(LOGIC);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                        LOGIC = addChildTerminalID(LOGIC);
+                   
+                        LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                         nexttoken();
                    
                     } else {
@@ -775,26 +804,26 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("v"))) {
-            LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-            LOGIC = addChildTerminalID(LOGIC);
+
+            LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                LOGIC = addChildTerminalID(LOGIC);
+ 
+                LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                 nexttoken();
          
                 BOOLEXPR(LOGIC);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                    LOGIC = addChildTerminalID(LOGIC);
+      
+                    LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                     nexttoken();
               
                     BOOLEXPR(LOGIC);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                        LOGIC = addChildTerminalID(LOGIC);
+                    
+                        LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                         nexttoken();
                     
                     } else {
@@ -810,20 +839,20 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("!"))) {
-            LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-            LOGIC = addChildTerminalID(LOGIC);
+
+            LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                LOGIC = addChildTerminalID(LOGIC);
+    
+                LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                 nexttoken();
               
                 BOOLEXPR(LOGIC);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                    LOGIC.appendChild(doc.createTextNode(input.get(pos).contents));
-                    LOGIC = addChildTerminalID(LOGIC);
+                 
+                    LOGIC = addChildTerminalID(LOGIC,input.get(pos).contents);
                     nexttoken();
                
                 } else {
@@ -839,15 +868,15 @@ public class Parse {
         }
     }
 
-    private static void BOOLVAR(Element parent) {
+    private static void BOOLVAR(node parent) {
         if (pos >= input.size()) {
             error(" b ");
         }
-        Element BOOLVAR = createElement(parent, "BOOLVAR");
+        node BOOLVAR = createNode(parent, "BOOLVAR");
 
         if (pos < input.size() && input.get(pos).contents.equals("b")) {
-            BOOLVAR.appendChild(doc.createTextNode(input.get(pos).contents));
-            BOOLVAR = addChildTerminalID(BOOLVAR);
+
+            BOOLVAR = addChildTerminalID(BOOLVAR,input.get(pos).contents);
             nexttoken();
          
             digits(BOOLVAR);
@@ -856,35 +885,35 @@ public class Parse {
         }
     }
 
-    private static void NUMEXPR(Element parent) {
+    private static void NUMEXPR(node parent) {
         if (pos >= input.size()) {
             error(" a or m or d or n or  0.00 or - or 1 to 9");
         }
 
-        Element NUMEXPR = createElement(parent, "NUMEXPR");
+        node NUMEXPR = createNode(parent, "NUMEXPR");
 
         if (pos < input.size() && (input.get(pos).contents).equals("a")) {// n DIGITS
-            NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            NUMEXPR = addChildTerminalID(NUMEXPR);
+         
+            NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                NUMEXPR = addChildTerminalID(NUMEXPR);
+    
+                NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                 nexttoken();
             
                 NUMEXPR(NUMEXPR);
 
           
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                    NUMEXPR = addChildTerminalID(NUMEXPR);
+                 
+                    NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                     nexttoken();
               
                     NUMEXPR(NUMEXPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                        NUMEXPR = addChildTerminalID(NUMEXPR);
+                
+                        NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                         nexttoken();
                       
                     } else {
@@ -900,28 +929,28 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("m"))) {
-            NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            NUMEXPR = addChildTerminalID(NUMEXPR);
+         
+            NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
 
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                NUMEXPR = addChildTerminalID(NUMEXPR);
+            
+                NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                 nexttoken();
              
                 NUMEXPR(NUMEXPR);
 
 
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                    NUMEXPR = addChildTerminalID(NUMEXPR);
+               
+                    NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                     nexttoken();
                   
                     NUMEXPR(NUMEXPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                        NUMEXPR = addChildTerminalID(NUMEXPR);
+                      
+                        NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                         nexttoken();
                        
                     } else {
@@ -937,28 +966,28 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("d"))) {
-            NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            NUMEXPR = addChildTerminalID(NUMEXPR);
+        
+            NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
 
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                NUMEXPR = addChildTerminalID(NUMEXPR);
+           
+                NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                 nexttoken();
                
                 NUMEXPR(NUMEXPR);
 
                
                 if (pos < input.size() && (input.get(pos).contents.equals(","))) {
-                    NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                    NUMEXPR = addChildTerminalID(NUMEXPR);
+            
+                    NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                     nexttoken();
                    
                     NUMEXPR(NUMEXPR);
                     if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                        NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-                        NUMEXPR = addChildTerminalID(NUMEXPR);
+                      
+                        NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
                         nexttoken();
                        
                     } else {
@@ -974,8 +1003,8 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("n"))) {// NUMVAR
-            NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            NUMEXPR = addChildTerminalID(NUMEXPR);
+
+            NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
             nexttoken();
          
             digits(NUMEXPR);
@@ -988,29 +1017,29 @@ public class Parse {
         }
     }
 
-    private static void DECNUM(Element parent) {
+    private static void DECNUM(node parent) {
         if (pos >= input.size()) {
             error("0.00 or - or 1 to 9");
         }
 
-        Element DECNUM = createElement(parent, "DECNUM");
+        node DECNUM = createNode(parent, "DECNUM");
 
         if (pos < input.size() && ((input.get(pos).contents.equals("0")))) {
-            DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
-            DECNUM = addChildTerminalID(DECNUM);
+        
+            DECNUM = addChildTerminalID(DECNUM,input.get(pos).contents);
             nexttoken();
             if(pos < input.size() && ((input.get(pos).contents.equals(".")))){
-                DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
-                DECNUM = addChildTerminalID(DECNUM);
+            
+                DECNUM = addChildTerminalID(DECNUM,input.get(pos).contents);
                 nexttoken();
                
                 if(pos < input.size() && ((input.get(pos).contents.equals("0")))){
-                    DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
-                    DECNUM = addChildTerminalID(DECNUM);
+              
+                    DECNUM = addChildTerminalID(DECNUM,input.get(pos).contents);
                     nexttoken();
                     if(pos < input.size() && ((input.get(pos).contents.equals("0")))){
-                        DECNUM.appendChild(doc.createTextNode(input.get(pos).contents));
-                        DECNUM = addChildTerminalID(DECNUM);
+           
+                        DECNUM = addChildTerminalID(DECNUM,input.get(pos).contents);
                         nexttoken();
                     }
                     else{
@@ -1040,30 +1069,30 @@ public class Parse {
         }
     }
 
-    private static void NEG(Element parent) {
+    private static void NEG(node parent) {
         if (pos >= input.size()) {
             error(" - ");
         }
 
 
-        Element NEG = createElement(parent, "NEG");
-        NEG.appendChild(doc.createTextNode(input.get(pos).contents));
-        NEG = addChildTerminalID(NEG);
+        node NEG = createNode(parent, "NEG");
+      
+        NEG = addChildTerminalID(NEG,input.get(pos).contents);
         nexttoken();
         POS(NEG);
     }
-    private static void POS(Element parent) {
+    private static void POS(node parent) {
         if (pos >= input.size()) {
             error(" 1 ... 9");
         }
 
-        Element POS = createElement(parent, "POS");
+        node POS = createNode(parent, "POS");
 
         INT(POS);
         
         if (pos < input.size() && ((input.get(pos).contents.equals(".")))) {
-            POS.appendChild(doc.createTextNode(input.get(pos).contents));
-            POS = addChildTerminalID(POS);
+
+            POS = addChildTerminalID(POS,input.get(pos).contents);
             nexttoken();
          
 
@@ -1076,17 +1105,17 @@ public class Parse {
 
     }
 
-    private static void INT(Element parent) {
+    private static void INT(node parent) {
         if (pos >= input.size()) {
             error(" 1 ... 9");
         }
 
-        Element INT = createElement(parent, "INT");
+        node INT = createNode(parent, "INT");
 
         if (pos < input.size() && ((isOneorNine(input.get(pos).contents)))) {
 
-            INT.appendChild(doc.createTextNode(input.get(pos).contents));
-            INT = addChildTerminalID(INT);
+
+            INT = addChildTerminalID(INT,input.get(pos).contents);
             nexttoken();
          
             MORE(INT);
@@ -1106,21 +1135,21 @@ public class Parse {
         return status;
     }
 
-    private static void call(Element parent) {
+    private static void call(node parent) {
         if (pos >= input.size()) {
             error(" c ");
         }
 
-        Element CALL = createElement(parent, "CALL");
+        node CALL = createNode(parent, "CALL");
 
         if (pos < input.size() && (((input.get(pos).contents).equals("c")))) {
-            CALL.appendChild(doc.createTextNode(input.get(pos).contents));
-            CALL = addChildTerminalID(CALL);
+   
+            CALL = addChildTerminalID(CALL,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (((input.get(pos).contents).equals("p")))) {
-                CALL.appendChild(doc.createTextNode(input.get(pos).contents));
-                CALL = addChildTerminalID(CALL);
+           
+                CALL = addChildTerminalID(CALL,input.get(pos).contents);
                 nexttoken();
                 
                 digits(CALL);
@@ -1134,40 +1163,40 @@ public class Parse {
         }
     }
 
-    private static void loop(Element parent) {
+    private static void loop(node parent) {
         if (pos >= input.size()) {
             error("w");
         }
 
-        Element LOOP = createElement(parent, "LOOP");
+        node LOOP = createNode(parent, "LOOP");
 
         if (pos < input.size() && (input.get(pos).contents).equals("w")) {
-            LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
-            LOOP = addChildTerminalID(LOOP);
+
+            LOOP = addChildTerminalID(LOOP,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
-                LOOP = addChildTerminalID(LOOP);
+             
+                LOOP = addChildTerminalID(LOOP,input.get(pos).contents);
                 nexttoken();
                
                 BOOLEXPR(LOOP);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                    LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
-                    LOOP = addChildTerminalID(LOOP);
+             
+                    LOOP = addChildTerminalID(LOOP,input.get(pos).contents);
                     nexttoken();
                    
                     if (pos < input.size() && (input.get(pos).contents.equals("{"))) {
-                        LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
-                        LOOP = addChildTerminalID(LOOP);
+                     
+                        LOOP = addChildTerminalID(LOOP,input.get(pos).contents);
                         nexttoken();
                        
                         algo(LOOP);
 
                         if (pos < input.size() && (input.get(pos).contents.equals("}"))) {
-                            LOOP.appendChild(doc.createTextNode(input.get(pos).contents));
-                            LOOP = addChildTerminalID(LOOP);
+                         
+                            LOOP = addChildTerminalID(LOOP,input.get(pos).contents);
                             nexttoken();
                             
                         } else {
@@ -1190,44 +1219,44 @@ public class Parse {
         }
     }
 
-    private static void branch(Element parent) {
+    private static void branch(node parent) {
         if (pos >= input.size()) {
             error("i");
         }
-        Element BRANCH = createElement(parent, "BRANCH");
+        node BRANCH = createNode(parent, "BRANCH");
 
         if (pos < input.size() && (input.get(pos).contents).equals("i")) {
-            BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
-            BRANCH = addChildTerminalID(BRANCH);
+          
+            BRANCH = addChildTerminalID(BRANCH,input.get(pos).contents);
             nexttoken();
          
             if (pos < input.size() && (input.get(pos).contents.equals("("))) {
-                BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
-                BRANCH = addChildTerminalID(BRANCH);
+
+                BRANCH = addChildTerminalID(BRANCH,input.get(pos).contents);
                 nexttoken();
                 
                 BOOLEXPR(BRANCH);
 
                 if (pos < input.size() && (input.get(pos).contents.equals(")"))) {
-                    BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
-                    BRANCH = addChildTerminalID(BRANCH);
+             
+                    BRANCH = addChildTerminalID(BRANCH,input.get(pos).contents);
                     nexttoken();
                    
                     if (pos < input.size() && (input.get(pos).contents.equals("t"))) {
-                        BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
-                        BRANCH = addChildTerminalID(BRANCH);
+                
+                        BRANCH = addChildTerminalID(BRANCH,input.get(pos).contents);
                         nexttoken();
                         
                         if (pos < input.size() && (input.get(pos).contents.equals("{"))) {
-                            BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
-                            BRANCH = addChildTerminalID(BRANCH);
+                          
+                            BRANCH = addChildTerminalID(BRANCH,input.get(pos).contents);
                             nexttoken();
                            
                             algo(BRANCH);
 
                             if (pos < input.size() && (input.get(pos).contents.equals("}"))) {
-                                BRANCH.appendChild(doc.createTextNode(input.get(pos).contents));
-                                BRANCH = addChildTerminalID(BRANCH);
+                             
+                                BRANCH = addChildTerminalID(BRANCH,input.get(pos).contents);
                                 nexttoken();
                                
 
@@ -1256,7 +1285,7 @@ public class Parse {
         }
     }
 
-    private static void ELSE(Element parent) {
+    private static void ELSE(node parent) {
         if (pos >= input.size()) {
             return;
         }
@@ -1267,25 +1296,25 @@ public class Parse {
             return;
 
         }
-        Element ELSE = createElement(parent, "ELSE");
+        node ELSE = createNode(parent, "ELSE");
 
         if (pos < input.size() && (input.get(pos).contents).equals("e")) {
-            ELSE.appendChild(doc.createTextNode(input.get(pos).contents));
-            ELSE = addChildTerminalID(ELSE);
+          
+            ELSE = addChildTerminalID(ELSE,input.get(pos).contents);
 
             nexttoken();
          
 
             if (pos < input.size() && (input.get(pos).contents.equals("{"))) {
-                ELSE.appendChild(doc.createTextNode(input.get(pos).contents));
-                ELSE = addChildTerminalID(ELSE);
+           
+                ELSE = addChildTerminalID(ELSE,input.get(pos).contents);
                 nexttoken();
                 
                 algo(ELSE);
 
                 if (pos < input.size() && (input.get(pos).contents.equals("}"))) {
-                    ELSE.appendChild(doc.createTextNode(input.get(pos).contents));
-                    ELSE = addChildTerminalID(ELSE);
+                
+                    ELSE = addChildTerminalID(ELSE,input.get(pos).contents);
                     nexttoken();
                    
 
@@ -1301,22 +1330,7 @@ public class Parse {
         }
     }
 
-    private static void halt(Element parent) {
-        if (pos >= input.size()) {
-            error("h");
-        }
 
-        Element HALT = createElement(parent, "HALT");
-
-        if (pos < input.size() && (input.get(pos).contents).equals("h")) {
-            HALT.appendChild(doc.createTextNode(input.get(pos).contents));
-            HALT = addChildTerminalID(HALT);
-            nexttoken();
-         
-        } else {
-            error("h");
-        }
-    }
 
     private static void nexttoken() {
 
@@ -1327,34 +1341,49 @@ public class Parse {
 
     }
 
-    private static Element addChildTerminalID(Element parent) {
+    // private static node addChildTerminalID(node parent) {
         
-        // If the parent has children, append the new child ID to the children attribute
-        String parentChildren = parent.getAttribute("children");
-        if (!parentChildren.isEmpty()) {
-            parentChildren += " ";
-        }
-        parentChildren += idCounter++;
-        parent.setAttribute("children", parentChildren);
+    //     // If the parent has children, append the new child ID to the children attribute
+    //     String parentChildren = parent.getAttribute("children");
+    //     if (!parentChildren.isEmpty()) {
+    //         parentChildren += " ";
+    //     }
+    //     parentChildren += idCounter++;
+    //     parent.setAttribute("children", parentChildren);
+    //     return parent;
+    // }
+    private static node addChildTerminalID(node parent,String name) {
+        
+        node terminal = new node(name,"Terminal");
+        terminal.setId(id++);
+        parent.addChild(terminal);
+       
         return parent;
     }
-
-    private static Element createElement(Element parent, String name) {
-        Element elem = doc.createElement(name);
-
-        elem.setAttribute("id", "" + idCounter++);
-
-        // If the parent has children, append the new child ID to the children attribute
-        String parentChildren = parent.getAttribute("children");
-        if (!parentChildren.isEmpty()) {
-            parentChildren += " ";
-        }
-        parentChildren += elem.getAttribute("id");
-        parent.setAttribute("children", parentChildren);
-
-        parent.appendChild(elem);
+    private static node createNode(node parent, String name) {
+        node elem = new node(name,"Non-Terminal");
+        elem.setId(id++);
+        parent.addChild(elem);
         return elem;
     }
+
+
+    // private static node createNode(node parent, String name) {
+    //     node elem = doc.createNode(name);
+
+    //     elem.setAttribute("id", "" + idCounter++);
+
+    //     // If the parent has children, append the new child ID to the children attribute
+    //     String parentChildren = parent.getAttribute("children");
+    //     if (!parentChildren.isEmpty()) {
+    //         parentChildren += " ";
+    //     }
+    //     parentChildren += elem.getAttribute("id");
+    //     parent.setAttribute("children", parentChildren);
+
+    //     parent.appendChild(elem);
+    //     return elem;
+    // }
 
     private static void error(String expected) {
         if (pos >= input.size()) {
