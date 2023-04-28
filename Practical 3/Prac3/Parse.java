@@ -108,7 +108,7 @@ public class Parse {
      * VALUE ::= o NUMVAR // The o stands for output
      * TEXT ::= r STRINGV // The r stands for response (to the user)
      */
-    void GoParse(ArrayList<lexer.token> arrayList) {
+    node GoParse(ArrayList<lexer.token> arrayList) {
         input = arrayList;
         // print out contents of input
         // for(int i=0;i<input.size();i++){
@@ -135,22 +135,26 @@ public class Parse {
             // DOMSource source = new DOMSource(doc);
             // StreamResult result = new StreamResult(new File("output.xml"));
             // transformer.transform(source, result);
-
             System.out.println("Program successfully parsed!");
+            return root;
+        
         } catch (Exception e) {
             System.out.println("Parsing error: " + e.getMessage());
         }
 
+        return null;
     }
 private void PRINTTREE(node node) {
     if(node==null){
         return;
     }
     if(node.type.equals("Non-Terminal")){
+        
         System.out.println("name: "+node.name+" id: "+node.id +" childrea: ");
         for(int i=0;i<node.children.size();i++){
-            System.out.println(node.children.get(i).id +" ");
+            System.out.print(node.children.get(i).id +" ");
         }
+        System.out.println();
 
         for(int ii=0;ii<node.children.size();ii++){
             PRINTTREE(node.children.get(ii));
@@ -1004,10 +1008,11 @@ private void PRINTTREE(node node) {
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("n"))) {// NUMVAR
 
-            NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
-            nexttoken();
+            // NUMEXPR = addChildTerminalID(NUMEXPR,input.get(pos).contents);
+            // nexttoken();
          
-            digits(NUMEXPR);
+            // digits(NUMEXPR);
+            NUMVAR(NUMEXPR);
 
         } else if (pos < input.size() && ( (input.get(pos).contents.equals("-")) || (Character.isDigit(input.get(pos).contents.charAt(0))))) {
             DECNUM(NUMEXPR);
