@@ -974,11 +974,12 @@ public class Parse {
             }
 
         } else if (pos < input.size() && (input.get(pos).contents.equals("n"))) {// NUMVAR
-            NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
-            NUMEXPR = addChildTerminalID(NUMEXPR);
-            nexttoken();
+            // NUMEXPR.appendChild(doc.createTextNode(input.get(pos).contents));
+            // NUMEXPR = addChildTerminalID(NUMEXPR);
+            // nexttoken();
          
-            digits(NUMEXPR);
+            // digits(NUMEXPR);
+            NUMVAR(NUMEXPR);
 
         } else if (pos < input.size() && ( (input.get(pos).contents.equals("-")) || (Character.isDigit(input.get(pos).contents.charAt(0))))) {
             DECNUM(NUMEXPR);
