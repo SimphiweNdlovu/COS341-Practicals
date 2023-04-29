@@ -3,6 +3,8 @@ public class SymbolTable {
     String NodeName;
     int ScopeId;
     String ScopeName; //can Global or  scope that  is defined in
+
+    Boolean called=false;
 /* EXAMPLE:
 
     h

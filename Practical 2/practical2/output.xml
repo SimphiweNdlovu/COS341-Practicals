@@ -1,69 +1,120 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<PROGR children="1 4" id="0">
+<PROGR children="1 9" id="0">
     <ALGO children="2" id="1">
-        <INSTR children="3" id="2">h</INSTR>
+        <INSTR children="3" id="2">
+            <CALL children="4 5 6" id="3">
+                cp
+                <DIGITS children="7" id="6">
+                    <D children="8" id="7">1</D>
+                </DIGITS>
+            </CALL>
+        </INSTR>
     </ALGO>
-    <PROCDEFS children="5 6 61" id="4">
+    <PROCDEFS children="10 11 99" id="9">
         ,
-        <PROC children="7 8 11 12 60" id="6">
+        <PROC children="12 13 16 17 98" id="11">
             p
-            <DIGITS children="9" id="8">
-                <D children="10" id="9">1</D>
+            <DIGITS children="14" id="13">
+                <D children="15" id="14">1</D>
             </DIGITS>
             {
-            <PROGR children="13 21" id="12">
-                <ALGO children="14" id="13">
-                    <INSTR children="15" id="14">
-                        <CALL children="16 17 18" id="15">
+            <PROGR children="18 26" id="17">
+                <ALGO children="19" id="18">
+                    <INSTR children="20" id="19">
+                        <CALL children="21 22 23" id="20">
                             cp
-                            <DIGITS children="19" id="18">
-                                <D children="20" id="19">2</D>
+                            <DIGITS children="24" id="23">
+                                <D children="25" id="24">3</D>
                             </DIGITS>
                         </CALL>
                     </INSTR>
                 </ALGO>
-                <PROCDEFS children="22 23 34" id="21">
+                <PROCDEFS children="27 28 44" id="26">
                     ,
-                    <PROC children="24 25 28 29 33" id="23">
+                    <PROC children="29 30 33 34 43" id="28">
                         p
-                        <DIGITS children="26" id="25">
-                            <D children="27" id="26">2</D>
+                        <DIGITS children="31" id="30">
+                            <D children="32" id="31">2</D>
                         </DIGITS>
                         {
-                        <PROGR children="30" id="29">
-                            <ALGO children="31" id="30">
-                                <INSTR children="32" id="31">h</INSTR>
+                        <PROGR children="35" id="34">
+                            <ALGO children="36" id="35">
+                                <INSTR children="37" id="36">
+                                    <CALL children="38 39 40" id="37">
+                                        cp
+                                        <DIGITS children="41" id="40">
+                                            <D children="42" id="41">2</D>
+                                        </DIGITS>
+                                    </CALL>
+                                </INSTR>
                             </ALGO>
                         </PROGR>
                         }
                     </PROC>
-                    <PROCDEFS children="35 36" id="34">
+                    <PROCDEFS children="45 46" id="44">
                         ,
-                        <PROC children="37 38 41 42 59" id="36">
+                        <PROC children="47 48 51 52 97" id="46">
                             p
-                            <DIGITS children="39" id="38">
-                                <D children="40" id="39">3</D>
+                            <DIGITS children="49" id="48">
+                                <D children="50" id="49">3</D>
                             </DIGITS>
                             {
-                            <PROGR children="43 46" id="42">
-                                <ALGO children="44" id="43">
-                                    <INSTR children="45" id="44">h</INSTR>
+                            <PROGR children="53 61" id="52">
+                                <ALGO children="54" id="53">
+                                    <INSTR children="55" id="54">
+                                        <CALL children="56 57 58" id="55">
+                                            cp
+                                            <DIGITS children="59" id="58">
+                                                <D children="60" id="59">2</D>
+                                            </DIGITS>
+                                        </CALL>
+                                    </INSTR>
                                 </ALGO>
-                                <PROCDEFS children="47 48" id="46">
+                                <PROCDEFS children="62 63 79" id="61">
                                     ,
-                                    <PROC children="49 50 53 54 58" id="48">
+                                    <PROC children="64 65 68 69 78" id="63">
                                         p
-                                        <DIGITS children="51" id="50">
-                                            <D children="52" id="51">4</D>
+                                        <DIGITS children="66" id="65">
+                                            <D children="67" id="66">4</D>
                                         </DIGITS>
                                         {
-                                        <PROGR children="55" id="54">
-                                            <ALGO children="56" id="55">
-                                                <INSTR children="57" id="56">h</INSTR>
+                                        <PROGR children="70" id="69">
+                                            <ALGO children="71" id="70">
+                                                <INSTR children="72" id="71">
+                                                    <CALL children="73 74 75" id="72">
+                                                        cp
+                                                        <DIGITS children="76" id="75">
+                                                            <D children="77" id="76">6</D>
+                                                        </DIGITS>
+                                                    </CALL>
+                                                </INSTR>
                                             </ALGO>
                                         </PROGR>
                                         }
                                     </PROC>
+                                    <PROCDEFS children="80 81" id="79">
+                                        ,
+                                        <PROC children="82 83 86 87 96" id="81">
+                                            p
+                                            <DIGITS children="84" id="83">
+                                                <D children="85" id="84">6</D>
+                                            </DIGITS>
+                                            {
+                                            <PROGR children="88" id="87">
+                                                <ALGO children="89" id="88">
+                                                    <INSTR children="90" id="89">
+                                                        <CALL children="91 92 93" id="90">
+                                                            cp
+                                                            <DIGITS children="94" id="93">
+                                                                <D children="95" id="94">4</D>
+                                                            </DIGITS>
+                                                        </CALL>
+                                                    </INSTR>
+                                                </ALGO>
+                                            </PROGR>
+                                            }
+                                        </PROC>
+                                    </PROCDEFS>
                                 </PROCDEFS>
                             </PROGR>
                             }
@@ -73,17 +124,24 @@
             </PROGR>
             }
         </PROC>
-        <PROCDEFS children="62 63" id="61">
+        <PROCDEFS children="100 101" id="99">
             ,
-            <PROC children="64 65 68 69 73" id="63">
+            <PROC children="102 103 106 107 116" id="101">
                 p
-                <DIGITS children="66" id="65">
-                    <D children="67" id="66">5</D>
+                <DIGITS children="104" id="103">
+                    <D children="105" id="104">5</D>
                 </DIGITS>
                 {
-                <PROGR children="70" id="69">
-                    <ALGO children="71" id="70">
-                        <INSTR children="72" id="71">h</INSTR>
+                <PROGR children="108" id="107">
+                    <ALGO children="109" id="108">
+                        <INSTR children="110" id="109">
+                            <CALL children="111 112 113" id="110">
+                                cp
+                                <DIGITS children="114" id="113">
+                                    <D children="115" id="114">5</D>
+                                </DIGITS>
+                            </CALL>
+                        </INSTR>
                     </ALGO>
                 </PROGR>
                 }
