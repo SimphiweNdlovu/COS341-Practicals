@@ -5,6 +5,7 @@ public class SymbolTable {
     String ScopeName; //can Global or  scope that  is defined in
 
     Boolean called=false;
+    int parentID;
 /* EXAMPLE:
 
     h

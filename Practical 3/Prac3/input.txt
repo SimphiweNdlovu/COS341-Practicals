@@ -1,18 +1,25 @@
-cp1,
-p1{
-    c p3,   
-    p2{
-        c p2
-    },
-    p3{
-        c p2, 
-         p4{
-           c p6
-        }, p6{
-           c p4
-      }
+cp2
+,p1{
+    cp2
+    ,p2{
+        cp4
+
+        ,p4{
+            s0:="   DECLARE D   "
+            
+        }
     }
-},
-p5{
-  cp5
+    
+    ,p3
+    {
+        s0:="   DECLARE C   "
+        ,p5{
+            s0:="   DECLARE A   "
+        }
+        ,p4{
+            s0:="   DECLARE D   "
+        }
+    }
+},p66{
+   cp1;cp66
 }

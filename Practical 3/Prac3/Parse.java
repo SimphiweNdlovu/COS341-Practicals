@@ -127,7 +127,8 @@ public class Parse {
 
                 error("end of a file");
             }
-            PRINTTREE(root);
+            // PRINTTREE(root);
+
             // Output the XML tree to a file
             // TransformerFactory transformerFactory = TransformerFactory.newInstance();
             // Transformer transformer = transformerFactory.newTransformer();

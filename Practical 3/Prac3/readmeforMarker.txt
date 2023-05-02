@@ -1,8 +1,11 @@
-To run the practical2.jar file on ubuntu System run the following command on the terminal
-"java -jar practical2.jar"
+To run the practical3.jar file on ubuntu System run the following command on the terminal
+"java -jar practical3.jar"
 
+Im using my Practical 2.
 use the input.txt to test 
 
+*Node: scopeID procedure is the node ID of the parent*
 
 
-*Note: it will not run when cliked.
+
+*Note: it will not run when cliked.*

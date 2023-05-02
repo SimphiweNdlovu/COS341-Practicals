@@ -12,7 +12,7 @@ public class SemanticAnalyzer {
 
     public void GOSemanticAnalyzer(node node) throws IOException {
         GOVarNames(node, 0, "global");
-        ArrayList<SymbolTable> proc = GOProcedureNames(node, 0, "global");
+        ArrayList<SymbolTable> proc = GOProcedureNames(node, 1, "Main");
         // add what is in proc to symbol table
         for (int i = 0; i < proc.size(); i++) {
             symbolTable.add(proc.get(i));
@@ -21,75 +21,127 @@ public class SemanticAnalyzer {
         // - proc can only call their children but not their grand children
         // - proc can only their siblings
         // - proc can only itself
-        callchecker(node, 0, "global");
-        String warnings=CheckifAllProcsAreCalled(symbolTable);
+        callchecker(node, 1, "Main");
+        String warnings = CheckifAllProcsAreCalled(symbolTable);
         // System.out.println("warnings: "+warnings);
-        declarationsChecker(node, 0, "global");
-        visualizeSymbolTable(symbolTable, "symbolTable.html",warnings);
-      
+        declarationsChecker(node, 1, "Main");
+        visualizeSymbolTable(symbolTable, "symbolTable.html", warnings);
+
     }
 
     private void declarationsChecker(node node, int scopeID, String scopeName) {
+        boolean enteredProc = false;
+
         if (node.name.equals("PROC")) {
+
             node theNode = node.children.get(1);
 
             String digits = concatenateDigits(theNode);
 
+            if (checkifProcNameIsSameAsParentSibling("p" + digits, scopeID, scopeName)) {
+             
+                System.exit(0);
+
+            } else if (checkifSiblingsHaveTheSameName("p" + digits, scopeID, scopeName)) {
+         
+                System.exit(0);
+            } else if (checkifParentandChildHaveTheSameName("p" + digits, scopeID, scopeName)) {
+           
+                System.exit(0);
+            }
+
+           
             scopeName = node.children.get(0).name + digits;
-            scopeID++;
+            enteredProc = true;
 
         }
         if (node.children.size() > 0) {
 
             for (node child : node.children) {
-                if (child.name.equals("CALL")) {
-                    node theNode = child.children.get(2);
-
-                    String digits = concatenateDigits(theNode);
-                    String procName = "p" + digits;
-                    System.out.println();
-                    System.out.println("CALL : " + procName);
-                    System.out.println("scopeID: " + scopeID + "   ScopeName: " + scopeName);
-
-           
-                    if (checkifProcIsDeclared(procName)) {
-                        System.out.println("procName: " + procName + " is declared");
-                    } else {
-                        System.out.println("\u001B[31m" + "ERROR:" + " The procedure ( " + procName
-                                + " )  called here is not declared" + "\u001B[0m");
-                        System.exit(0);
-                    }
-
-                    if (checkifProcIsCalledByParent(procName, scopeID, scopeName)) {
-                        System.out.println("procName: " + procName + " is in scope");
-                        setProcisCalledtoTrue(procName);
-                    } else if (checkifProcIsCalledBySibling(procName, scopeID, scopeName)) {// check if proc is called
-                        setProcisCalledtoTrue(procName);                                                              // by sibling
-                        System.out.println("procName: " + procName + " is in scope");
-                    } else if (checkifProcIsCalledByItSelf(procName, scopeID, scopeName)) {// check if proc is called by
-                        setProcisCalledtoTrue(procName);                                                  // itself
-                        System.out.println("procName: " + procName + " is in scope");
-
-                    } else {
-                        System.out.println("procName: " + procName + " is not in scope");
-                 
-                        System.out.println("\u001B[31m" + "ERROR: The procedure  ( " + procName
-                                + " ) called here has no corresponding declaration in this scope!" + "\u001B[0m");
-                        System.exit(0);
-                    }
+                if(enteredProc){
+                    declarationsChecker(child, node.id, scopeName);
                 }
-                callchecker(child, scopeID, scopeName);
+                else{
+                    declarationsChecker(child, scopeID, scopeName);
+                }
+              
             }
         }
     }
 
-    private String CheckifAllProcsAreCalled(ArrayList<SymbolTable> symbolTable2) {
-        String warnings="";
-        for (int i = 0; i < symbolTable2.size(); i++) {
-            if (symbolTable2.get(i).called == false) {
-                warnings+= "<p style='color: orange'>" + "WARNING: The procedure ( "+symbolTable2.get(i).NodeName+" ) declared here is not called from anywhere within the scope to which it belong!" + "</p>" +"\n";
+    private boolean checkifParentandChildHaveTheSameName(String procName, int scopeID2, String scopeName2) {
+    
+            if (procName.equals(scopeName2) ) {
 
-                        System.out.println("\u001B[38;5;208m" + "WARNING: The procedure  ( " + symbolTable2.get(i).NodeName
+                System.out.println("\u001B[31m" + "ERROR:  parent ( " + scopeName2 + " ) and child ( " + procName
+                        + " ) can not have the same name" + "\u001B[0m");
+                return true;
+            }
+
+    
+        return false;
+    }
+
+    private boolean checkifSiblingsHaveTheSameName(String procName, int scopeID2, String scopeName2) {
+        int count = 0;
+
+        
+        for (int i = 0; i < symbolTable.size(); i++) {
+            if (symbolTable.get(i).NodeName.equals(procName) && (scopeID2) == symbolTable.get(i).ScopeId &&symbolTable.get(i).ScopeName.equals(scopeName2)) {
+                count++;
+                if (count > 1) {
+                    System.out.println("\u001B[31m" + "ERROR:  siblings with procedure name of ( " + procName + " )  with  parentscopeName: ( "
+                            + symbolTable.get(i).ScopeName + " ) can not have the same name" + "\u001B[0m");
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+
+    private boolean checkifProcNameIsSameAsParentSibling(String procName, int scopeID2, String scopeName2) {
+        int x=0;
+        if(scopeName2=="Main"){
+            return false;
+        }
+        for(int i=0;i<symbolTable.size(); i++){
+            if(symbolTable.get(i).NodeId==scopeID2 ){
+                scopeID2=symbolTable.get(i).ScopeId;
+                scopeName2=symbolTable.get(i).ScopeName;
+                // System.out.println("scopeID2 :" +symbolTable.get(i).NodeName );
+                x=i;
+                break;
+            }
+        }
+      
+                for (int j = 0; j < symbolTable.size(); j++) {
+                    if (x == j) {
+                        continue;
+                    }
+                    if (symbolTable.get(j).ScopeId == scopeID2&&symbolTable.get(j).ScopeName.equals(scopeName2)
+                            && symbolTable.get(j).NodeName.equals(procName)) {
+                        System.out.println("\u001B[31m" + "ERROR: " + procName
+                                + " can not have the same name as its parent sibling" + "("
+                                + symbolTable.get(j).NodeName + ")  No procedure can have a child and a sibling with the same name!" 
+                                + "\u001B[0m");
+                        return true;
+                    }
+                }
+
+          
+        return false;
+    }
+
+    private String CheckifAllProcsAreCalled(ArrayList<SymbolTable> symbolTable2) {
+        String warnings = "";
+        for (int i = 0; i < symbolTable2.size(); i++) {
+            if ((symbolTable2.get(i).NodeName).charAt(0) == 'p' && symbolTable2.get(i).called == false) {
+                warnings += "<p style='color: orange'>" + "WARNING: The procedure ( " + symbolTable2.get(i).NodeName +" id: "+symbolTable2.get(i).NodeId
+                        + " ) declared here is not called from anywhere within the scope to which it belong!" + "</p>"
+                        + "\n";
+
+                System.out.println("\u001B[38;5;208m" + "WARNING: The procedure  ( " + symbolTable2.get(i).NodeName+" id: "+symbolTable2.get(i).NodeId
                         + " ) is not called in this scope!" + "\u001B[0m");
             }
         }
@@ -97,92 +149,107 @@ public class SemanticAnalyzer {
     }
 
     private void callchecker(node node, int scopeID, String scopeName) {
-
+        boolean enteredProc=false;
         if (node.name.equals("PROC")) {
             node theNode = node.children.get(1);
 
             String digits = concatenateDigits(theNode);
 
             scopeName = node.children.get(0).name + digits;
-            scopeID++;
-
+           
+            enteredProc=true;
         }
         if (node.children.size() > 0) {
 
             for (node child : node.children) {
+
+               
                 if (child.name.equals("CALL")) {
                     node theNode = child.children.get(2);
 
                     String digits = concatenateDigits(theNode);
                     String procName = "p" + digits;
-                    System.out.println();
-                    System.out.println("CALL : " + procName);
-                    System.out.println("scopeID: " + scopeID + "   ScopeName: " + scopeName);
-
-           
+                 
+                    // System.out.println("scope id: "+scopeID+" scope name: "+scopeName +" proc name: "+procName);
                     if (checkifProcIsDeclared(procName)) {
-                        System.out.println("procName: " + procName + " is declared");
+                        if (checkifProcIsCalledByParent(procName, scopeID, scopeName)) {
+                       
+                        
+                        } else if (checkifProcIsCalledBySibling(procName, scopeID, scopeName)) {// check if proc is called
+                         
+                          
+                        } else if (checkifProcIsCalledByItSelf(procName, scopeID, scopeName)) {// check if proc is called by
+                           
+                           
+    
+                        } else {
+                           
+                            System.out.println("\u001B[31m" + "ERROR: The procedure  ( " + procName
+                                    + " ) called here has no corresponding declaration in this scope!" + "\u001B[0m");
+                            System.exit(0);
+                        }
                     } else {
-                        System.out.println("\u001B[31m" + "ERROR:" + " The procedure ( " + procName
+                        System.out.println("\u001B[31m" + "ERROR:" + " The procedure ( " + procName 
                                 + " )  called here is not declared" + "\u001B[0m");
                         System.exit(0);
                     }
-
-                    if (checkifProcIsCalledByParent(procName, scopeID, scopeName)) {
-                        System.out.println("procName: " + procName + " is in scope");
-                        setProcisCalledtoTrue(procName);
-                    } else if (checkifProcIsCalledBySibling(procName, scopeID, scopeName)) {// check if proc is called
-                        setProcisCalledtoTrue(procName);                                                              // by sibling
-                        System.out.println("procName: " + procName + " is in scope");
-                    } else if (checkifProcIsCalledByItSelf(procName, scopeID, scopeName)) {// check if proc is called by
-                        setProcisCalledtoTrue(procName);                                                  // itself
-                        System.out.println("procName: " + procName + " is in scope");
-
-                    } else {
-                        System.out.println("procName: " + procName + " is not in scope");
-                 
-                        System.out.println("\u001B[31m" + "ERROR: The procedure  ( " + procName
-                                + " ) called here has no corresponding declaration in this scope!" + "\u001B[0m");
-                        System.exit(0);
-                    }
+                    callchecker(child, scopeID, scopeName);
+                   
+                }else if(enteredProc){
+                    callchecker(child, node.id, scopeName);
+                }else{
+                    callchecker(child, scopeID, scopeName);
                 }
-                callchecker(child, scopeID, scopeName);
+               
             }
         }
     }
 
-    private void setProcisCalledtoTrue(String procName) {
+    private void setProcisCalledtoTrue(String procName,int NodeId) {
         for (int i = 0; i < symbolTable.size(); i++) {
-            if (symbolTable.get(i).NodeName.equals(procName)) {
+            if (symbolTable.get(i).NodeName.equals(procName) && symbolTable.get(i).NodeId==NodeId) {
                 symbolTable.get(i).called = true;
             }
         }
     }
 
     private boolean checkifProcIsCalledByItSelf(String procName, int scopeID2, String scopeName2) {
-        for (int i = 0; i < symbolTable.size(); i++) {
-            if (symbolTable.get(i).NodeName.equals(procName)) {
-                if (symbolTable.get(i).ScopeName.equals(scopeName2)) {
+        if((procName).equals(scopeName2)){
+            for(int i=0;i<symbolTable.size(); i++){
+                if((symbolTable.get(i).NodeId)==scopeID2){
+                    setProcisCalledtoTrue(procName,symbolTable.get(i).NodeId);
                     return true;
                 }
             }
+           
         }
         return false;
     }
 
     private boolean checkifProcIsCalledBySibling(String procName, int scopeID2, String scopeName2) {
-        for (int i = 0; i < symbolTable.size(); i++) {
-            if (symbolTable.get(i).NodeName.equals(scopeName2)) {
-                String parentName = symbolTable.get(i).ScopeName;
-                for (int j = 0; j < symbolTable.size(); j++) {
-                    if (symbolTable.get(j).NodeName.equals(procName)) {
-                        if (symbolTable.get(j).ScopeName.equals(parentName)) {
-                            return true;
-                        }
-                    }
-                }
+        int x=0;
+        for(int i=0;i<symbolTable.size(); i++){
+            if(symbolTable.get(i).NodeId==scopeID2 && symbolTable.get(i).NodeName.equals(scopeName2)){
+                scopeID2=symbolTable.get(i).ScopeId;
+                scopeName2=symbolTable.get(i).ScopeName;
+                x=i;
+                break;
             }
         }
+
+      
+        
+                for(int j=0;j<symbolTable.size(); j++){
+                    if(x==j){  // skip where its being called.
+                        continue;
+                    }
+                    if(symbolTable.get(j).NodeName.equals(procName) && (scopeID2)==symbolTable.get(j).ScopeId){
+                        setProcisCalledtoTrue(procName,symbolTable.get(j).NodeId);
+                        return true;
+                    }
+                }
+               
+    
         return false;
     }
 
@@ -199,6 +266,7 @@ public class SemanticAnalyzer {
         for (int i = 0; i < symbolTable.size(); i++) {
             if (symbolTable.get(i).NodeName.equals(procName)) {
                 if (symbolTable.get(i).ScopeName.equals(scopeName2)) {
+                    setProcisCalledtoTrue(procName,symbolTable.get(i).NodeId);
                     return true;
                 }
             }
@@ -209,30 +277,36 @@ public class SemanticAnalyzer {
     private static ArrayList<SymbolTable> GOProcedureNames(node node, int scopeID2, String parentProcName) {
 
         ArrayList<SymbolTable> STProc = new ArrayList<SymbolTable>();
+        boolean enteredProc=false;
 
         if (node.name.equals("PROC")) {
             node theNode = node.children.get(1);
 
             String digits = concatenateDigits(theNode);
-            System.out.println();
-            System.out.println(node.children.get(0).name + " : " + digits);
+         
 
             STProc.add(new SymbolTable(node.id, node.children.get(0).name + digits, scopeID2, parentProcName));
-
-            System.out.println();
-            System.out.println();
-
+            // System.out.println(node.id+"                "+ node.children.get(0).name + digits+"                   "+ scopeID2+"                "+ parentProcName);
+        
             parentProcName = node.children.get(0).name + digits;
-            scopeID2++;
+          
+            enteredProc=true;
+
 
         }
-        if (node.children.size() > 0) {
+
+         if (node.children.size() > 0) {
 
             for (node child : node.children) {
-                STProc.addAll(GOProcedureNames(child, scopeID2, parentProcName));
+
+               if(enteredProc==true){
+                STProc.addAll(GOProcedureNames(child, node.id, parentProcName));
+                
+                }else{
+                    STProc.addAll(GOProcedureNames(child, scopeID2, parentProcName));
+                }
             }
         }
-
         return STProc;
 
     }
@@ -249,14 +323,12 @@ public class SemanticAnalyzer {
                     node theNode = node.children.get(ii).children.get(1);
 
                     String digits = concatenateDigits(theNode);
-                    System.out.println();
-                    System.out.println(node.children.get(ii).children.get(0).name + " : " + digits);
+                    
                     // search for nodename in the symbol table if it is there then do not add it
                     if (SearchForNodeName(node.children.get(ii).children.get(0).name + digits)) {
                         symbolTable.add(new SymbolTable(node.children.get(ii).id,
                                 node.children.get(ii).children.get(0).name + digits, 0, "global"));
-                        System.out.println();
-                        System.out.println();
+                     
                     }
 
                     // ii=ii+1;
@@ -332,10 +404,9 @@ public class SemanticAnalyzer {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             writer.write("<!DOCTYPE html>\n<html>\n<head>\n<title>Symbol Table</title>\n</head>\n<body>\n");
             writer.write(table + "\n");
-            if(!string.equals("")){//warning 
-           
+            if (!string.equals("")) {// warning
 
-                writer.write( string);
+                writer.write(string);
             }
             writer.write("</body>\n</html>");
             writer.close();

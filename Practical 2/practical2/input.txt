@@ -1,18 +1,24 @@
-cp1,
-p1{
-    c p3,   
-    p2{
-        c p2
-    },
-    p3{
-        c p2, 
-         p4{
-           c p6
-        }, p6{
-           c p4
-      }
+s0:="Using Figure   ";
+s0:="call your mum:)"
+,p1{
+    s0:="   DECLARE A   "
+    ,p2{
+        s0:="   DECLARE B   "
+
+        ,p4{
+            s0:="   DECLARE D   ";
+            cp1
+        }
     }
-},
-p5{
-  cp5
+    
+    ,p3
+    {
+        s0:="   DECLARE C   "
+        ,p1{
+            s0:="   DECLARE A   "
+        }
+        ,p4{
+            s0:="   DECLARE D   "
+        }
+    }
 }
