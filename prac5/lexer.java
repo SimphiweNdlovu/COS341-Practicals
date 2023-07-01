@@ -88,9 +88,12 @@ public class lexer {
           if (myChar[i] == ' ') {
             continue;
           }
-          if (myChar[i] == '\t') {
+
+          // allow for tab space
+          else if (myChar[i] == '\t') {
             continue;
           }
+        
           if (myChar[i] != ' ' && myChar[i] != '*' && myChar[i] != ':' && myChar[i] != '=' && myChar[i] != '0'
               && !numbers.contains(myChar[i]) && myChar[i] != '\"'
               && !(letter.contains(myChar[i]) || numbers.contains(myChar[i]) || _tokenSymbols.contains(myChar[i])

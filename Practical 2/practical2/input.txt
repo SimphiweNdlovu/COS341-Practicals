@@ -1,24 +1,28 @@
-s0:="Using Figure   ";
-s0:="call your mum:)"
-,p1{
-    s0:="   DECLARE A   "
-    ,p2{
-        s0:="   DECLARE B   "
+g n4;
+o n3;
+b1:=T;
+b2:=b1;
+r s19,
 
-        ,p4{
-            s0:="   DECLARE D   ";
-            cp1
-        }
-    }
-    
-    ,p3
-    {
-        s0:="   DECLARE C   "
-        ,p1{
-            s0:="   DECLARE A   "
-        }
-        ,p4{
-            s0:="   DECLARE D   "
-        }
-    }
+
+p1{
+	n1:=0.00
+},
+
+p2{
+	n2:=-6676.00
+},
+
+
+p3{
+
+	c p1;
+	c p2;
+	c p4,
+
+	p4{
+	n5:=96.00
+
+}
+
 }

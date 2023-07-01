@@ -1,0 +1,6 @@
+10 IF 1 THEN GOTO 40 
+20 LET P = 1 
+30 GOTO 50 
+40 LET P = 0 
+50 LET  b1 = P
+ 50 END

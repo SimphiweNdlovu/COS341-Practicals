@@ -1,209 +1,279 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<PROGR children="1 27" id="0">
-    <ALGO children="2 13" id="1">
+<PROGR children="1 72" id="0">
+    <ALGO children="2 10" id="1">
         <INSTR children="3" id="2">
-            <ASSIGN children="4 9 10 11" id="3">
-                <STRINGV children="5 6" id="4">
-                    s
-                    <DIGITS children="7" id="6">
-                        <D children="8" id="7">0</D>
+            <INPUT children="4 5" id="3">
+                g
+                <NUMVAR children="6 7" id="5">
+                    n
+                    <DIGITS children="8" id="7">
+                        <D children="9" id="8">4</D>
                     </DIGITS>
-                </STRINGV>
-                :=
-                <STRI children="12" id="11">"Using Figure   "</STRI>
-            </ASSIGN>
+                </NUMVAR>
+            </INPUT>
         </INSTR>
-        <SEQ children="14 15" id="13">
+        <SEQ children="11 12" id="10">
             ;
-            <ALGO children="16" id="15">
-                <INSTR children="17" id="16">
-                    <ASSIGN children="18 23 24 25" id="17">
-                        <STRINGV children="19 20" id="18">
-                            s
-                            <DIGITS children="21" id="20">
-                                <D children="22" id="21">0</D>
-                            </DIGITS>
-                        </STRINGV>
-                        :=
-                        <STRI children="26" id="25">"call your mum:)"</STRI>
-                    </ASSIGN>
+            <ALGO children="13 22" id="12">
+                <INSTR children="14" id="13">
+                    <OUTPUT children="15" id="14">
+                        <VALUE children="16 17" id="15">
+                            o
+                            <NUMVAR children="18 19" id="17">
+                                n
+                                <DIGITS children="20" id="19">
+                                    <D children="21" id="20">3</D>
+                                </DIGITS>
+                            </NUMVAR>
+                        </VALUE>
+                    </OUTPUT>
                 </INSTR>
+                <SEQ children="23 24" id="22">
+                    ;
+                    <ALGO children="25 37" id="24">
+                        <INSTR children="26" id="25">
+                            <ASSIGN children="27 32 33 34" id="26">
+                                <BOOLVAR children="28 29" id="27">
+                                    b
+                                    <DIGITS children="30" id="29">
+                                        <D children="31" id="30">1</D>
+                                    </DIGITS>
+                                </BOOLVAR>
+                                :=
+                                <BOOLEXPR children="35" id="34">
+                                    <LOGIC children="36" id="35">T</LOGIC>
+                                </BOOLEXPR>
+                            </ASSIGN>
+                        </INSTR>
+                        <SEQ children="38 39" id="37">
+                            ;
+                            <ALGO children="40 56" id="39">
+                                <INSTR children="41" id="40">
+                                    <ASSIGN children="42 47 48 49" id="41">
+                                        <BOOLVAR children="43 44" id="42">
+                                            b
+                                            <DIGITS children="45" id="44">
+                                                <D children="46" id="45">2</D>
+                                            </DIGITS>
+                                        </BOOLVAR>
+                                        :=
+                                        <BOOLEXPR children="50" id="49">
+                                            <LOGIC children="51" id="50">
+                                                <BOOLVAR children="52 53" id="51">
+                                                    b
+                                                    <DIGITS children="54" id="53">
+                                                        <D children="55" id="54">1</D>
+                                                    </DIGITS>
+                                                </BOOLVAR>
+                                            </LOGIC>
+                                        </BOOLEXPR>
+                                    </ASSIGN>
+                                </INSTR>
+                                <SEQ children="57 58" id="56">
+                                    ;
+                                    <ALGO children="59" id="58">
+                                        <INSTR children="60" id="59">
+                                            <OUTPUT children="61" id="60">
+                                                <TEXT children="62 63" id="61">
+                                                    r
+                                                    <STRINGV children="64 65" id="63">
+                                                        s
+                                                        <DIGITS children="66 68" id="65">
+                                                            <D children="67" id="66">1</D>
+                                                            <MORE children="69" id="68">
+                                                                <DIGITS children="70" id="69">
+                                                                    <D children="71" id="70">9</D>
+                                                                </DIGITS>
+                                                            </MORE>
+                                                        </DIGITS>
+                                                    </STRINGV>
+                                                </TEXT>
+                                            </OUTPUT>
+                                        </INSTR>
+                                    </ALGO>
+                                </SEQ>
+                            </ALGO>
+                        </SEQ>
+                    </ALGO>
+                </SEQ>
             </ALGO>
         </SEQ>
     </ALGO>
-    <PROCDEFS children="28 29" id="27">
+    <PROCDEFS children="73 74 98" id="72">
         ,
-        <PROC children="30 31 34 35 168" id="29">
+        <PROC children="75 76 79 80 97" id="74">
             p
-            <DIGITS children="32" id="31">
-                <D children="33" id="32">1</D>
+            <DIGITS children="77" id="76">
+                <D children="78" id="77">1</D>
             </DIGITS>
             {
-            <PROGR children="36 48" id="35">
-                <ALGO children="37" id="36">
-                    <INSTR children="38" id="37">
-                        <ASSIGN children="39 44 45 46" id="38">
-                            <STRINGV children="40 41" id="39">
-                                s
-                                <DIGITS children="42" id="41">
-                                    <D children="43" id="42">0</D>
+            <PROGR children="81" id="80">
+                <ALGO children="82" id="81">
+                    <INSTR children="83" id="82">
+                        <ASSIGN children="84 89 90 91" id="83">
+                            <NUMVAR children="85 86" id="84">
+                                n
+                                <DIGITS children="87" id="86">
+                                    <D children="88" id="87">1</D>
                                 </DIGITS>
-                            </STRINGV>
+                            </NUMVAR>
                             :=
-                            <STRI children="47" id="46">"   DECLARE A   "</STRI>
+                            <NUMEXPR children="92" id="91">
+                                <DECNUM children="93 94 95 96" id="92">0.00</DECNUM>
+                            </NUMEXPR>
                         </ASSIGN>
                     </INSTR>
                 </ALGO>
-                <PROCDEFS children="49 50 102" id="48">
-                    ,
-                    <PROC children="51 52 55 56 101" id="50">
-                        p
-                        <DIGITS children="53" id="52">
-                            <D children="54" id="53">2</D>
-                        </DIGITS>
-                        {
-                        <PROGR children="57 69" id="56">
-                            <ALGO children="58" id="57">
-                                <INSTR children="59" id="58">
-                                    <ASSIGN children="60 65 66 67" id="59">
-                                        <STRINGV children="61 62" id="60">
-                                            s
-                                            <DIGITS children="63" id="62">
-                                                <D children="64" id="63">0</D>
-                                            </DIGITS>
-                                        </STRINGV>
-                                        :=
-                                        <STRI children="68" id="67">"   DECLARE B   "</STRI>
-                                    </ASSIGN>
-                                </INSTR>
-                            </ALGO>
-                            <PROCDEFS children="70 71" id="69">
-                                ,
-                                <PROC children="72 73 76 77 100" id="71">
-                                    p
-                                    <DIGITS children="74" id="73">
-                                        <D children="75" id="74">4</D>
-                                    </DIGITS>
-                                    {
-                                    <PROGR children="78" id="77">
-                                        <ALGO children="79 90" id="78">
-                                            <INSTR children="80" id="79">
-                                                <ASSIGN children="81 86 87 88" id="80">
-                                                    <STRINGV children="82 83" id="81">
-                                                        s
-                                                        <DIGITS children="84" id="83">
-                                                            <D children="85" id="84">0</D>
-                                                        </DIGITS>
-                                                    </STRINGV>
-                                                    :=
-                                                    <STRI children="89" id="88">"   DECLARE D   "</STRI>
-                                                </ASSIGN>
-                                            </INSTR>
-                                            <SEQ children="91 92" id="90">
-                                                ;
-                                                <ALGO children="93" id="92">
-                                                    <INSTR children="94" id="93">
-                                                        <CALL children="95 96 97" id="94">
-                                                            cp
-                                                            <DIGITS children="98" id="97">
-                                                                <D children="99" id="98">1</D>
-                                                            </DIGITS>
-                                                        </CALL>
-                                                    </INSTR>
-                                                </ALGO>
-                                            </SEQ>
-                                        </ALGO>
-                                    </PROGR>
-                                    }
-                                </PROC>
-                            </PROCDEFS>
-                        </PROGR>
-                        }
-                    </PROC>
-                    <PROCDEFS children="103 104" id="102">
-                        ,
-                        <PROC children="105 106 109 110 167" id="104">
-                            p
-                            <DIGITS children="107" id="106">
-                                <D children="108" id="107">3</D>
-                            </DIGITS>
-                            {
-                            <PROGR children="111 123" id="110">
-                                <ALGO children="112" id="111">
-                                    <INSTR children="113" id="112">
-                                        <ASSIGN children="114 119 120 121" id="113">
-                                            <STRINGV children="115 116" id="114">
-                                                s
-                                                <DIGITS children="117" id="116">
-                                                    <D children="118" id="117">0</D>
-                                                </DIGITS>
-                                            </STRINGV>
-                                            :=
-                                            <STRI children="122" id="121">"   DECLARE C   "</STRI>
-                                        </ASSIGN>
-                                    </INSTR>
-                                </ALGO>
-                                <PROCDEFS children="124 125 145" id="123">
-                                    ,
-                                    <PROC children="126 127 130 131 144" id="125">
-                                        p
-                                        <DIGITS children="128" id="127">
-                                            <D children="129" id="128">1</D>
-                                        </DIGITS>
-                                        {
-                                        <PROGR children="132" id="131">
-                                            <ALGO children="133" id="132">
-                                                <INSTR children="134" id="133">
-                                                    <ASSIGN children="135 140 141 142" id="134">
-                                                        <STRINGV children="136 137" id="135">
-                                                            s
-                                                            <DIGITS children="138" id="137">
-                                                                <D children="139" id="138">0</D>
-                                                            </DIGITS>
-                                                        </STRINGV>
-                                                        :=
-                                                        <STRI children="143" id="142">"   DECLARE A   "</STRI>
-                                                    </ASSIGN>
-                                                </INSTR>
-                                            </ALGO>
-                                        </PROGR>
-                                        }
-                                    </PROC>
-                                    <PROCDEFS children="146 147" id="145">
-                                        ,
-                                        <PROC children="148 149 152 153 166" id="147">
-                                            p
-                                            <DIGITS children="150" id="149">
-                                                <D children="151" id="150">4</D>
-                                            </DIGITS>
-                                            {
-                                            <PROGR children="154" id="153">
-                                                <ALGO children="155" id="154">
-                                                    <INSTR children="156" id="155">
-                                                        <ASSIGN children="157 162 163 164" id="156">
-                                                            <STRINGV children="158 159" id="157">
-                                                                s
-                                                                <DIGITS children="160" id="159">
-                                                                    <D children="161" id="160">0</D>
-                                                                </DIGITS>
-                                                            </STRINGV>
-                                                            :=
-                                                            <STRI children="165" id="164">"   DECLARE D   "</STRI>
-                                                        </ASSIGN>
-                                                    </INSTR>
-                                                </ALGO>
-                                            </PROGR>
-                                            }
-                                        </PROC>
-                                    </PROCDEFS>
-                                </PROCDEFS>
-                            </PROGR>
-                            }
-                        </PROC>
-                    </PROCDEFS>
-                </PROCDEFS>
             </PROGR>
             }
         </PROC>
+        <PROCDEFS children="99 100 142" id="98">
+            ,
+            <PROC children="101 102 105 106 141" id="100">
+                p
+                <DIGITS children="103" id="102">
+                    <D children="104" id="103">2</D>
+                </DIGITS>
+                {
+                <PROGR children="107" id="106">
+                    <ALGO children="108" id="107">
+                        <INSTR children="109" id="108">
+                            <ASSIGN children="110 115 116 117" id="109">
+                                <NUMVAR children="111 112" id="110">
+                                    n
+                                    <DIGITS children="113" id="112">
+                                        <D children="114" id="113">2</D>
+                                    </DIGITS>
+                                </NUMVAR>
+                                :=
+                                <NUMEXPR children="118" id="117">
+                                    <DECNUM children="119" id="118">
+                                        <NEG children="120 121" id="119">
+                                            -
+                                            <POS children="122 136 137 139" id="121">
+                                                <INT children="123 124" id="122">
+                                                    6
+                                                    <MORE children="125" id="124">
+                                                        <DIGITS children="126 128" id="125">
+                                                            <D children="127" id="126">6</D>
+                                                            <MORE children="129" id="128">
+                                                                <DIGITS children="130 132" id="129">
+                                                                    <D children="131" id="130">7</D>
+                                                                    <MORE children="133" id="132">
+                                                                        <DIGITS children="134" id="133">
+                                                                            <D children="135" id="134">6</D>
+                                                                        </DIGITS>
+                                                                    </MORE>
+                                                                </DIGITS>
+                                                            </MORE>
+                                                        </DIGITS>
+                                                    </MORE>
+                                                </INT>
+                                                .
+                                                <D children="138" id="137">0</D>
+                                                <D children="140" id="139">0</D>
+                                            </POS>
+                                        </NEG>
+                                    </DECNUM>
+                                </NUMEXPR>
+                            </ASSIGN>
+                        </INSTR>
+                    </ALGO>
+                </PROGR>
+                }
+            </PROC>
+            <PROCDEFS children="143 144" id="142">
+                ,
+                <PROC children="145 146 149 150 213" id="144">
+                    p
+                    <DIGITS children="147" id="146">
+                        <D children="148" id="147">3</D>
+                    </DIGITS>
+                    {
+                    <PROGR children="151 179" id="150">
+                        <ALGO children="152 159" id="151">
+                            <INSTR children="153" id="152">
+                                <CALL children="154 155 156" id="153">
+                                    cp
+                                    <DIGITS children="157" id="156">
+                                        <D children="158" id="157">1</D>
+                                    </DIGITS>
+                                </CALL>
+                            </INSTR>
+                            <SEQ children="160 161" id="159">
+                                ;
+                                <ALGO children="162 169" id="161">
+                                    <INSTR children="163" id="162">
+                                        <CALL children="164 165 166" id="163">
+                                            cp
+                                            <DIGITS children="167" id="166">
+                                                <D children="168" id="167">2</D>
+                                            </DIGITS>
+                                        </CALL>
+                                    </INSTR>
+                                    <SEQ children="170 171" id="169">
+                                        ;
+                                        <ALGO children="172" id="171">
+                                            <INSTR children="173" id="172">
+                                                <CALL children="174 175 176" id="173">
+                                                    cp
+                                                    <DIGITS children="177" id="176">
+                                                        <D children="178" id="177">4</D>
+                                                    </DIGITS>
+                                                </CALL>
+                                            </INSTR>
+                                        </ALGO>
+                                    </SEQ>
+                                </ALGO>
+                            </SEQ>
+                        </ALGO>
+                        <PROCDEFS children="180 181" id="179">
+                            ,
+                            <PROC children="182 183 186 187 212" id="181">
+                                p
+                                <DIGITS children="184" id="183">
+                                    <D children="185" id="184">4</D>
+                                </DIGITS>
+                                {
+                                <PROGR children="188" id="187">
+                                    <ALGO children="189" id="188">
+                                        <INSTR children="190" id="189">
+                                            <ASSIGN children="191 196 197 198" id="190">
+                                                <NUMVAR children="192 193" id="191">
+                                                    n
+                                                    <DIGITS children="194" id="193">
+                                                        <D children="195" id="194">5</D>
+                                                    </DIGITS>
+                                                </NUMVAR>
+                                                :=
+                                                <NUMEXPR children="199" id="198">
+                                                    <DECNUM children="200" id="199">
+                                                        <POS children="201 207 208 210" id="200">
+                                                            <INT children="202 203" id="201">
+                                                                9
+                                                                <MORE children="204" id="203">
+                                                                    <DIGITS children="205" id="204">
+                                                                        <D children="206" id="205">6</D>
+                                                                    </DIGITS>
+                                                                </MORE>
+                                                            </INT>
+                                                            .
+                                                            <D children="209" id="208">0</D>
+                                                            <D children="211" id="210">0</D>
+                                                        </POS>
+                                                    </DECNUM>
+                                                </NUMEXPR>
+                                            </ASSIGN>
+                                        </INSTR>
+                                    </ALGO>
+                                </PROGR>
+                                }
+                            </PROC>
+                        </PROCDEFS>
+                    </PROGR>
+                    }
+                </PROC>
+            </PROCDEFS>
+        </PROCDEFS>
     </PROCDEFS>
 </PROGR>

@@ -1,0 +1,60 @@
+// The C++ Testing Tool will be https://www.onlinegdb.com/online_c++_compiler
+
+#include <iostream>
+#include <cstring>
+#include <iomanip>
+#include <cstdlib>
+#include <string>
+#include <cctype> // NO other #include are allowed!
+using namespace std; // NO other using are allowed!
+// global
+string s = "ACACACBAACBA";
+ // NO other global variables are allowed!
+// Here will be your Recursive Function implementation
+
+string matchPattern(string& s) {
+    if (s.empty()) {
+    
+        return s;
+    }
+
+    
+    if (s.substr(0, 4) == "ACBA") {
+        string remaining = s.substr(4);
+        string result = matchPattern(remaining);
+        if (result != "mapping not possible") {
+            return "X" + result;
+        }
+    }
+
+    if (s.substr(0, 3) == "BAB") {
+        string remaining = s.substr(3);
+        string result = matchPattern(remaining);
+        if (result != "mapping not possible") {
+            return "Y" + result;
+        }
+    }
+
+    if (s.substr(0, 2) == "AC") {
+        string remaining = s.substr(2);
+        string result = matchPattern(remaining);
+        if (result != "mapping not possible") {
+            return "Z" + result;
+        }
+    }
+
+    
+    return "mapping not possible";
+}
+
+int main()
+{
+ // Here may perhaps be some other stuff that you might need ...
+ // Here will be the call to your Recursive Function ...
+  s = matchPattern(s);
+ // Here may perhaps be some other stuff that you might need ...
+ cout << s; // Display the output string (after translation).
+ // If the INPUT string cannot be translated then the output
+ // string must contain the Error-Message.
+ return 0;
+}
