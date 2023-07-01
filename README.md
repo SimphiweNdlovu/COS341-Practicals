@@ -25,18 +25,6 @@ To work on these practicals, you should have a basic understanding of programmin
    - Study the process of translating source code into executable machine code.
    - Implement a translation phase to generate intermediate code.
 
-## Getting Started
-Follow the instructions provided in each practical's directory to complete the assigned tasks. Make sure to read the accompanying documentation and code comments for guidance.
 
-## Additional Resources
-For additional learning resources and references on compiler construction, please refer to the `resources.md` file in the repository.
-
-## Contributions
-Contributions to this repository are welcome! If you have any improvements, bug fixes, or new practical ideas, feel free to submit a pull request.
-
-## License
-This project is licensed under the [MIT License](LICENSE). Feel free to use the code provided in this repository for educational purposes.
-
-Happy coding!
 
 ![Compiler Construction](images/compiler-construction.jpg)
