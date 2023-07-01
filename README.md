@@ -18,7 +18,7 @@ To work on these practicals, you should have a basic understanding of programmin
    - Understand and implement scoping rules in a compiler.
    - Handle variable scoping and symbol table management.
 
-4. Practical 4: Optimization Techniques
+4. Practical 4:(OSP) Optimization Techniques
    - Explore various optimization techniques to improve the performance of the generated code.
 
 5. Practical 5: Translation
@@ -27,4 +27,4 @@ To work on these practicals, you should have a basic understanding of programmin
 
 
 
-![Compiler Construction](images/compiler-construction.jpg)
+
